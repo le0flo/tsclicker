@@ -3,10 +3,12 @@ CFLAGS = -c -O2 -Wall -fPIC
 all: tsclicker
 
 tsclicker: tsclicker-obj
-	gcc -o tsclicker.dll -shared plugin.o
+	gcc -o build/tsclicker.dll -shared build/plugin.o build/clicker.o
 
-tsclicker-obj: ./src/plugin.c
-	gcc -Iinclude src/plugin.c $(CFLAGS)
+tsclicker-obj: clean
+	mkdir -p build
+	gcc -o build/plugin.o -Iinclude src/plugin.c $(CFLAGS)
+	gcc -o build/clicker.o -Iinclude src/clicker.c $(CFLAGS)
 
 clean:
-	rm -rf *.o tsclicker.dll
+	rm -rf build/*
