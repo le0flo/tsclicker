@@ -4,15 +4,12 @@
  * Copyright (c) TeamSpeak Systems GmbH
  */
 
-#if defined(WIN32) || defined(__WIN32__) || defined(_WIN32)
-#pragma warning(disable : 4100)
-#include <Windows.h>
-#endif
-
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
+#include <assert.h>
+#include <Windows.h>
 
 #include "teamspeak/public_definitions.h"
 #include "teamspeak/public_errors.h"
@@ -21,19 +18,12 @@
 #include "ts3_functions.h"
 
 #include "plugin.h"
+#include "clicker.h"
 
 static struct TS3Functions ts3Functions;
 
-#ifdef _WIN32
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
 #define snprintf sprintf_s
-#else
-#define _strcpy(dest, destSize, src)                                                                                                                                                                                                                           \
-    {                                                                                                                                                                                                                                                          \
-        strncpy(dest, src, destSize - 1);                                                                                                                                                                                                                      \
-        (dest)[destSize - 1] = '\0';                                                                                                                                                                                                                           \
-    }
-#endif
 
 #define PLUGIN_API_VERSION 26
 
@@ -46,8 +36,6 @@ static struct TS3Functions ts3Functions;
 
 static char* pluginID = NULL;
 
-#ifdef _WIN32
-
 // Helper function to convert wchar_T to Utf-8 encoded strings on Windows
 static int wcharToUtf8(const wchar_t* str, char** result) {
     int outlen = WideCharToMultiByte(CP_UTF8, 0, str, -1, 0, 0, 0, 0);
@@ -59,13 +47,10 @@ static int wcharToUtf8(const wchar_t* str, char** result) {
     return 0;
 }
 
-#endif
-
 /*********************************** Required functions ************************************/
 
 // Unique name identifying this plugin
 const char* ts3plugin_name() {
-#ifdef _WIN32
     static char* result = NULL;
     if (!result) {
         const wchar_t* name = L"TS clicker (alpha)";
@@ -74,9 +59,6 @@ const char* ts3plugin_name() {
         }
     }
     return result;
-#else
-    return "TS clicker (alpha)";
-#endif
 }
 
 // Plugin version
@@ -91,7 +73,6 @@ int ts3plugin_apiVersion() {
 
 // Plugin author
 const char* ts3plugin_author() {
-#ifdef _WIN32
     static char* result = NULL;
     if (!result) {
         const wchar_t* name = L"Bestemmie";
@@ -100,14 +81,10 @@ const char* ts3plugin_author() {
         }
     }
     return result;
-#else
-    return "Bestemmie";
-#endif
 }
 
 // Plugin description
 const char* ts3plugin_description() {
-#ifdef _WIN32
     static char* result = NULL;
     if (!result) {
         const wchar_t* name = L"Questo plugin è un simpatico autoclicker per minecraft 1.8.9.";
@@ -116,9 +93,6 @@ const char* ts3plugin_description() {
         }
     }
     return result;
-#else
-    return "Questo plugin è un simpatico autoclicker per minecraft 1.8.9.";
-#endif
 }
 
 // Set TeamSpeak 3 callback functions
@@ -142,6 +116,8 @@ int ts3plugin_init() {
     ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, pluginID);
 
     printf("PLUGIN: App path: %s\nResources path: %s\nConfig path: %s\nPlugin path: %s\n", appPath, resourcesPath, configPath, pluginPath);
+
+
 
     return 0;
 }
@@ -253,7 +229,8 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
         case PLUGIN_MENU_TYPE_GLOBAL:
             switch (menuItemID) {
                 case TSCLICKER_MENU_TOGGLE: {
-                    // TODO
+                    bool status = tsclicker_toggle();
+                    tsclicker_printstatus(status);
                 }
                 break;
                 case TSCLICKER_MENU_RELOAD: {
@@ -273,8 +250,19 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
     printf("PLUGIN: Hotkey event: %s\n", keyword);
 
     if (keyword == "tsclicker_toggle") {
-        // TODO
+        bool status = tsclicker_toggle();
+        tsclicker_printstatus(status);
     } else if (keyword == "tsclicker_reload") {
         // TODO
+    }
+}
+
+/************************** TS clicker declarations ***************************/
+
+void tsclicker_printstatus(bool status) {
+    if (status) {
+        ts3Functions.printMessageToCurrentTab("TS clicker | on");
+    } else {
+        ts3Functions.printMessageToCurrentTab("TS clicker | off");
     }
 }

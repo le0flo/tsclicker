@@ -1,5 +1,4 @@
 .DS_Store
 .idea
 .vscode
-*.o
-tsclicker.dll
+build/
