@@ -1,5 +1,5 @@
 /*
- * TeamSpeak 3 demo plugin
+ * TeamSpeak 3 demo plugin | TS clicker (alpha)
  *
  * Copyright (c) TeamSpeak Systems GmbH
  */
