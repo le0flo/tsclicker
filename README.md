@@ -4,7 +4,7 @@ Questo plugin di teamspeak è in realtà un simpatico e semplice autoclicker scr
 Ideato per prendere in giro gli staff di tutti i server pvp di minecraft.
 Supporta una modalità di click palese agli anticheat oppure i valori presi da un registratore di click.
 
-### ATTENZIONE: questo plugin funziona soltanto su windows.
+### ATTENZIONE: questo plugin funziona soltanto su windows e su minecraft.
 
 # Compilazione
 
