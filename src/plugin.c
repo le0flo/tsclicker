@@ -19,6 +19,7 @@
 
 #include "plugin.h"
 #include "clicker.h"
+#include "utils.h"
 
 static struct TS3Functions ts3Functions;
 
@@ -117,7 +118,9 @@ int ts3plugin_init() {
 
     printf("PLUGIN: App path: %s\nResources path: %s\nConfig path: %s\nPlugin path: %s\n", appPath, resourcesPath, configPath, pluginPath);
 
+    /* Inizializza gli intervalli con il valore cps default */
 
+    tsclicker_intervals_fixed(16);
 
     return 0;
 }
@@ -221,20 +224,36 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
     END_CREATE_HOTKEYS;
 }
 
+/************************** TS clicker functionalities ***************************/
+
+void tsclicker_func_toggle() {
+    bool status = tsclicker_toggle();
+
+    char message[100] = "TS clicker | ";
+    tsclicker_utils_formatbooleanstring(message, status, "on", "off");
+    ts3Functions.printMessageToCurrentTab(message);
+}
+
+void tsclicker_func_reloadconfig() {
+    bool status = tsclicker_intervals_config();
+
+    char message[100] = "TS clicker | ";
+    tsclicker_utils_formatbooleanstring(message, status, "caricato", "non caricato");
+    ts3Functions.printMessageToCurrentTab(message);
+}
+
 /************************** TeamSpeak callbacks ***************************/
 
 void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenuType type, int menuItemID, uint64 selectedItemID) {
-    printf("PLUGIN: onMenuItemEvent: serverConnectionHandlerID=%llu, type=%d, menuItemID=%d, selectedItemID=%llu\n", (long long unsigned int)serverConnectionHandlerID, type, menuItemID, (long long unsigned int)selectedItemID);
     switch (type) {
         case PLUGIN_MENU_TYPE_GLOBAL:
             switch (menuItemID) {
                 case TSCLICKER_MENU_TOGGLE: {
-                    bool status = tsclicker_toggle();
-                    tsclicker_printstatus(status);
+                    tsclicker_func_toggle();
                 }
                 break;
                 case TSCLICKER_MENU_RELOAD: {
-                    // TODO
+                    tsclicker_func_reloadconfig();
                 }
                 break;
                 default:
@@ -247,22 +266,9 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 }
 
 void ts3plugin_onHotkeyEvent(const char* keyword) {
-    printf("PLUGIN: Hotkey event: %s\n", keyword);
-
-    if (keyword == "tsclicker_toggle") {
-        bool status = tsclicker_toggle();
-        tsclicker_printstatus(status);
-    } else if (keyword == "tsclicker_reload") {
-        // TODO
-    }
-}
-
-/************************** TS clicker declarations ***************************/
-
-void tsclicker_printstatus(bool status) {
-    if (status) {
-        ts3Functions.printMessageToCurrentTab("TS clicker | on");
-    } else {
-        ts3Functions.printMessageToCurrentTab("TS clicker | off");
+    if (strcmp(keyword, "tsclicker_toggle") == 0) {
+        tsclicker_func_toggle();
+    } else if (strcmp(keyword, "tsclicker_reload") == 0) {
+        tsclicker_func_reloadconfig();
     }
 }

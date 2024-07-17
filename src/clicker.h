@@ -1,6 +1,5 @@
-/* TS clicker values and methods */
-
-void *tsclicker_thread(void *args);
+/* TS clicker main methods */
 
 bool tsclicker_toggle();
-void tsclicker_printstatus(bool status);
+void tsclicker_intervals_fixed(int cps);
+bool tsclicker_intervals_config();
