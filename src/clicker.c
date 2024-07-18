@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
@@ -17,18 +16,19 @@ DWORD clickerth_id;
 int intervals[NINTERVALS] = { 0 };
 
 DWORD WINAPI tsclicker_thread(LPVOID lpArg) {
-    HWND foregroundWindow;
+    HWND foreground_window;
     
     int i = 0;
 
     while (running) {
-        foregroundWindow = GetForegroundWindow();
-        if(GetAsyncKeyState(VK_LBUTTON) && (FindWindowA(("LWJGL"), NULL) == foregroundWindow || FindWindowA(("GLFW30"), NULL) == foregroundWindow)){
-            SendMessageW(GetForegroundWindow(), WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(0, 0));
-            SendMessageW(GetForegroundWindow(), WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(0, 0));
+        foreground_window = GetForegroundWindow();
+        if(GetAsyncKeyState(VK_LBUTTON) && (FindWindowA(("LWJGL"), NULL) == foreground_window || FindWindowA(("GLFW30"), NULL) == foreground_window)) {
+            
+            SendMessageA(foreground_window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(0, 0));
+            SendMessageA(foreground_window, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(0, 0));
         }
 
-        Sleep(intervals[i%NINTERVALS]);
+        Sleep(intervals[i % NINTERVALS]  * 1.5);
         i++;
     }
 
@@ -70,7 +70,7 @@ bool tsclicker_toggle() {
     }
 
     for (unsigned int i=0; i<NINTERVALS && fgets(line, sizeof(line) / sizeof(char), file_p) != NULL; i++) {
-        intervals[i] = atoi(line) * 1.5;
+        intervals[i] = atoi(line);
     }
 
     fclose(file_p);
