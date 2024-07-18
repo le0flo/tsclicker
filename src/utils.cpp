@@ -1,5 +1,4 @@
-#include <stdbool.h>
-#include <string.h>
+#include <string>
 #include <Windows.h>
 
 void tsclicker_utils_formatbooleanstring(char* string, bool value, char* trueopt, char* falseopt) {

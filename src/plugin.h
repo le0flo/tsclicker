@@ -11,6 +11,8 @@
 
 /* Teamspeak library methods */
 
+extern "C" {
+
 /* Required functions */
 PLUGINS_EXPORTDLL const char* ts3plugin_name();
 PLUGINS_EXPORTDLL const char* ts3plugin_version();
@@ -136,5 +138,7 @@ PLUGINS_EXPORTDLL void ts3plugin_onClientDisplayNameChanged(uint64 serverConnect
 PLUGINS_EXPORTDLL const char* ts3plugin_keyDeviceName(const char* keyIdentifier);
 PLUGINS_EXPORTDLL const char* ts3plugin_displayKeyText(const char* keyIdentifier);
 PLUGINS_EXPORTDLL const char* ts3plugin_keyPrefix();
+
+}
 
 #endif
