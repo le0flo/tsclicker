@@ -4,10 +4,8 @@
  * Copyright (c) TeamSpeak Systems GmbH
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
+#include <iostream>
+#include <string>
 #include <assert.h>
 #include <Windows.h>
 
@@ -228,6 +226,10 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 
 void tsclicker_plugin_toggle() {
     bool status = tsclicker_toggle();
+    
+    // TODO
+    //std::string message = "TS clicker | ";
+    //message += (status ? "on" : "off");
 
     char message[100] = "TS clicker | ";
     tsclicker_utils_formatbooleanstring(message, status, "on", "off");

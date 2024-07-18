@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
+#include <iostream>
 #include <time.h>
 #include <Windows.h>
 
