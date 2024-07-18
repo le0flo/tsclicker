@@ -1,14 +1,6 @@
 #include <string>
 #include <Windows.h>
 
-void tsclicker_utils_formatbooleanstring(char* string, bool value, char* trueopt, char* falseopt) {
-    if (value) {
-        strcat(string, trueopt);
-    } else {
-        strcat(string, falseopt);
-    }
-}
-
 void tsclicker_utils_getlocalfilepath(char* filepath, const char* filename) {
     char currentfilepath[MAX_PATH];
     HMODULE hm = NULL;
