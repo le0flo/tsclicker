@@ -226,7 +226,7 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 
 /************************** TS clicker functionalities ***************************/
 
-void tsclicker_func_toggle() {
+void tsclicker_plugin_toggle() {
     bool status = tsclicker_toggle();
 
     char message[100] = "TS clicker | ";
@@ -234,7 +234,7 @@ void tsclicker_func_toggle() {
     ts3Functions.printMessageToCurrentTab(message);
 }
 
-void tsclicker_func_reloadconfig() {
+void tsclicker_plugin_reloadconfig() {
     bool status = tsclicker_intervals_config();
 
     char message[100] = "TS clicker | ";
@@ -249,11 +249,11 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
         case PLUGIN_MENU_TYPE_GLOBAL:
             switch (menuItemID) {
                 case TSCLICKER_MENU_TOGGLE: {
-                    tsclicker_func_toggle();
+                    tsclicker_plugin_toggle();
                 }
                 break;
                 case TSCLICKER_MENU_RELOAD: {
-                    tsclicker_func_reloadconfig();
+                    tsclicker_plugin_reloadconfig();
                 }
                 break;
                 default:
@@ -267,8 +267,8 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 
 void ts3plugin_onHotkeyEvent(const char* keyword) {
     if (strcmp(keyword, "tsclicker_toggle") == 0) {
-        tsclicker_func_toggle();
+        tsclicker_plugin_toggle();
     } else if (strcmp(keyword, "tsclicker_reload") == 0) {
-        tsclicker_func_reloadconfig();
+        tsclicker_plugin_reloadconfig();
     }
 }
