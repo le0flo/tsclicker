@@ -1,13 +1,42 @@
 #ifndef CLICKER_H
 #define CLICKER_H
 
-#define N_INTERVALS 1000
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <time.h>
+#include <Windows.h>
 
-/* TS clicker main methods */
+class Clicker {
+private:
+    HANDLE thread;
+    DWORD thread_id;
 
-bool tsclicker_toggle();
-void tsclicker_intervals_setmode(bool isfixed);
-void tsclicker_intervals_fixed_update(int updatedcps);
-bool tsclicker_intervals_config_update();
+    static DWORD WINAPI clicker(LPVOID lpArg);
+
+    bool running;
+    
+    bool using_recorded_clicks;
+    std::vector<int> intervals;
+
+    int cps = 16;
+    bool left_click;
+    bool right_click;
+
+public:
+    Clicker();
+
+    bool toggle();
+
+    void use_recorded_clicks(bool using_recorded_clicks);
+    bool update_recorded_clicks();
+
+    void set_cps(int cps);
+    void set_left_click(bool left_click);
+    void set_right_click(bool right_click);
+};
+
+void dummy_function();
 
 #endif
