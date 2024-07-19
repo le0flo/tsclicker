@@ -38,7 +38,7 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
         }
         
         if (instance->using_recorded_clicks) {
-            Sleep(instance->intervals[iteration % instance->intervals.size()]);
+            Sleep(instance->intervals[iteration % instance->intervals.size()] * 1.5);
             iteration++;
         } else {
             Sleep(1000 / instance->cps);
@@ -116,6 +116,13 @@ void Clicker::set_left_click(bool left_click) {
 
 void Clicker::set_right_click(bool right_click) {
     this->right_click = right_click;
+}
+
+void Clicker::forcestop() {
+    if (running) {
+        running = false;
+        WaitForSingleObject(thread, INFINITE);
+    }
 }
 
 void dummy_function() {

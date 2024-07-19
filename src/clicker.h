@@ -35,6 +35,8 @@ public:
     void set_cps(int cps);
     void set_left_click(bool left_click);
     void set_right_click(bool right_click);
+
+    void forcestop();
 };
 
 void dummy_function();

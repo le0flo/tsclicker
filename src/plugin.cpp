@@ -90,6 +90,12 @@ int ts3plugin_init() {
 }
 
 void ts3plugin_shutdown() {
+    config_ui->deleteLater();
+    delete config_ui;
+
+    clicker->forcestop();
+    delete clicker;
+
     if (pluginID) {
         free(pluginID);
         pluginID = NULL;
