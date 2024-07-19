@@ -17,6 +17,7 @@
 
 #include "plugin.h"
 #include "clicker.h"
+#include "configui.h"
 #include "utils.h"
 
 static struct TS3Functions ts3Functions;
@@ -25,6 +26,10 @@ static struct TS3Functions ts3Functions;
 #define snprintf sprintf_s
 
 #define PLUGIN_API_VERSION 26
+#define PLUGIN_NAME "TS clicker"
+#define PLUGIN_VERSION "1.0"
+#define PLUGIN_AUTHOR "Bestemmie"
+#define PLUGIN_DESCRIPTION "Questo plugin si trasforma in un simpatico autoclicker per minecraft 1.8.9."
 
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
@@ -35,34 +40,14 @@ static struct TS3Functions ts3Functions;
 
 static char* pluginID = NULL;
 
-// Helper function to convert wchar_T to Utf-8 encoded strings on Windows
-static int wcharToUtf8(const wchar_t* str, char** result) {
-    int outlen = WideCharToMultiByte(CP_UTF8, 0, str, -1, 0, 0, 0, 0);
-    *result    = (char*)malloc(outlen);
-    if (WideCharToMultiByte(CP_UTF8, 0, str, -1, *result, outlen, 0, 0) == 0) {
-        *result = NULL;
-        return -1;
-    }
-    return 0;
-}
-
-/*********************************** Required functions ************************************/
-
 // Unique name identifying this plugin
 const char* ts3plugin_name() {
-    static char* result = NULL;
-    if (!result) {
-        const wchar_t* name = L"TS clicker";
-        if (wcharToUtf8(name, &result) == -1) {
-            result = "TS clicker";
-        }
-    }
-    return result;
+    return PLUGIN_NAME;
 }
 
 // Plugin version
 const char* ts3plugin_version() {
-    return "0.1 alpha";
+    return PLUGIN_VERSION;
 }
 
 // Plugin API version. Must be the same as the clients API major version, else the plugin fails to load.
@@ -72,26 +57,12 @@ int ts3plugin_apiVersion() {
 
 // Plugin author
 const char* ts3plugin_author() {
-    static char* result = NULL;
-    if (!result) {
-        const wchar_t* name = L"Bestemmie";
-        if (wcharToUtf8(name, &result) == -1) {
-            result = "Bestemmie";
-        }
-    }
-    return result;
+    return PLUGIN_AUTHOR;
 }
 
 // Plugin description
 const char* ts3plugin_description() {
-    static char* result = NULL;
-    if (!result) {
-        const wchar_t* name = L"Questo plugin si trasforma in un simpatico autoclicker per minecraft 1.8.9.";
-        if (wcharToUtf8(name, &result) == -1) {
-            result = "Questo plugin si trasforma in un simpatico autoclicker per minecraft 1.8.9.";
-        }
-    }
-    return result;
+    return PLUGIN_DESCRIPTION;
 }
 
 // Set TeamSpeak 3 callback functions
@@ -107,36 +78,25 @@ int ts3plugin_init() {
     char configPath[PATH_BUFSIZE];
     char pluginPath[PATH_BUFSIZE];
 
-    printf("PLUGIN: init\n");
-
     ts3Functions.getAppPath(appPath, PATH_BUFSIZE);
     ts3Functions.getResourcesPath(resourcesPath, PATH_BUFSIZE);
     ts3Functions.getConfigPath(configPath, PATH_BUFSIZE);
     ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, pluginID);
-
-    printf("PLUGIN: App path: %s\nResources path: %s\nConfig path: %s\nPlugin path: %s\n", appPath, resourcesPath, configPath, pluginPath);
 
     return 0;
 }
 
 // Custom code called right before the plugin is unloaded
 void ts3plugin_shutdown() {
-    /* Your plugin cleanup code here */
-    printf("PLUGIN: shutdown\n");
-
     if (pluginID) {
         free(pluginID);
         pluginID = NULL;
     }
 }
 
-/************************** Optionals ***************************/
-
 // Enables the configuration page
 int ts3plugin_offersConfigure() {
-    printf("PLUGIN: offersConfigure\n");
-    
-    return PLUGIN_OFFERS_NO_CONFIGURE;
+    return PLUGIN_OFFERS_CONFIGURE_QT_THREAD;
 }
 
 // Register id for menu items and hotkeys
@@ -144,15 +104,12 @@ void ts3plugin_registerPluginID(const char* id) {
     const size_t sz = strlen(id) + 1;
     pluginID        = (char*)malloc(sz * sizeof(char));
     _strcpy(pluginID, sz, id); /* The id buffer will invalidate after exiting this function */
-    printf("PLUGIN: registerPluginID: %s\n", pluginID);
 }
 
 // Necessary for menu items
 void ts3plugin_freeMemory(void* data) {
     free(data);
 }
-
-/************************** TeamSpeak menus ***************************/
 
 // Helper function to create a menu item
 static struct PluginMenuItem* createMenuItem(enum PluginMenuType type, int id, const char* text, const char* icon) {
@@ -188,8 +145,6 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
     *menuIcon = (char*)malloc(PLUGIN_MENU_BUFSZ * sizeof(char));
     _strcpy(*menuIcon, PLUGIN_MENU_BUFSZ, "t.png");
 }
-
-/************************** TeamSpeak hotkeys ***************************/
 
 // Helper function to create a hotkey
 static struct PluginHotkey* createHotkey(const char* keyword, const char* description) {
