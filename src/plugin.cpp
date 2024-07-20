@@ -25,10 +25,6 @@ static struct TS3Functions ts3Functions;
 #define snprintf sprintf_s
 
 #define PLUGIN_API_VERSION 26
-#define PLUGIN_NAME "TS clicker"
-#define PLUGIN_VERSION "1.0"
-#define PLUGIN_AUTHOR "Bestemmie"
-#define PLUGIN_DESCRIPTION "Questo plugin si trasforma in un simpatico autoclicker per minecraft 1.8.9."
 
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
@@ -41,11 +37,6 @@ static char* pluginID = NULL;
 
 Clicker* clicker;
 ConfigUi* config_ui;
-
-enum {
-    TSCLICKER_GLOBAL_TOGGLE = 1,
-    TSCLICKER_GLOBAL_RELOAD
-};
 
 const char* ts3plugin_name() {
     return PLUGIN_NAME;
@@ -120,35 +111,6 @@ void ts3plugin_freeMemory(void* data) {
     free(data);
 }
 
-static struct PluginMenuItem* createMenuItem(enum PluginMenuType type, int id, const char* text, const char* icon) {
-    struct PluginMenuItem* menuItem = (struct PluginMenuItem*)malloc(sizeof(struct PluginMenuItem));
-    menuItem->type = type;
-    menuItem->id = id;
-    _strcpy(menuItem->text, PLUGIN_MENU_BUFSZ, text);
-    _strcpy(menuItem->icon, PLUGIN_MENU_BUFSZ, icon);
-    return menuItem;
-}
-
-#define BEGIN_CREATE_MENUS(x)                                                                                                                                                                                                                                  \
-    const size_t sz = x + 1;                                                                                                                                                                                                                                   \
-    size_t       n  = 0;                                                                                                                                                                                                                                       \
-    *menuItems      = (struct PluginMenuItem**)malloc(sizeof(struct PluginMenuItem*) * sz);
-#define CREATE_MENU_ITEM(a, b, c, d) (*menuItems)[n++] = createMenuItem(a, b, c, d);
-#define END_CREATE_MENUS                                                                                                                                                                                                                                       \
-    (*menuItems)[n++] = NULL;                                                                                                                                                                                                                                  \
-    assert(n == sz);
-
-void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
-
-    BEGIN_CREATE_MENUS(2);
-    CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, TSCLICKER_GLOBAL_TOGGLE, "Toggle", "");
-    CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, TSCLICKER_GLOBAL_RELOAD, "Reload", "");
-    END_CREATE_MENUS;
-
-    *menuIcon = (char*)malloc(PLUGIN_MENU_BUFSZ * sizeof(char));
-    _strcpy(*menuIcon, PLUGIN_MENU_BUFSZ, "");
-}
-
 static struct PluginHotkey* createHotkey(const char* keyword, const char* description) {
     struct PluginHotkey* hotkey = (struct PluginHotkey*)malloc(sizeof(struct PluginHotkey));
     _strcpy(hotkey->keyword, PLUGIN_HOTKEY_BUFSZ, keyword);
@@ -166,59 +128,79 @@ static struct PluginHotkey* createHotkey(const char* keyword, const char* descri
     assert(n == sz);
 
 void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
-    BEGIN_CREATE_HOTKEYS(2);
+    BEGIN_CREATE_HOTKEYS(5);
     CREATE_HOTKEY("tsclicker_toggle", "Toggle");
-    CREATE_HOTKEY("tsclicker_reload", "Reload");
+    CREATE_HOTKEY("tsclicker_toggle_left_click", "Toggle left click");
+    CREATE_HOTKEY("tsclicker_toggle_right_click", "Toggle right click");
+    CREATE_HOTKEY("tsclicker_toggle_recorded_clicks", "Toggle recorded clicks");
+    CREATE_HOTKEY("tsclicker_reload", "Reload recorded clicks");
     END_CREATE_HOTKEYS;
 }
 
 /************************** Callbacks ***************************/
-
-void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenuType type, int menuItemID, uint64 selectedItemID) {
-    switch (type) {
-        case PLUGIN_MENU_TYPE_GLOBAL:
-            switch (menuItemID) {
-                case TSCLICKER_GLOBAL_TOGGLE: {
-                    tsclicker_toggle();
-                    break;
-                }
-                case TSCLICKER_GLOBAL_RELOAD: {
-                    tsclicker_reload();
-                    break;
-                }
-                default:
-                    break;
-            }
-            break;
-        default:
-            break;
-    }
-}
 
 void ts3plugin_onHotkeyEvent(const char* keyword) {
     std::string hotkey = std::string(keyword);
 
     if (hotkey == "tsclicker_toggle") {
         tsclicker_toggle();
+    } else if (hotkey == "tsclicker_toggle_left_click") {
+        tsclicker_toggle_left_click();
+    } else if (hotkey == "tsclicker_toggle_right_click") {
+        tsclicker_toggle_right_click();
+    } else if (hotkey == "tsclicker_toggle_recorded_clicks") {
+        tsclicker_toggle_recorded_clicks();
     } else if (hotkey == "tsclicker_reload") {
-        tsclicker_reload();
+        tsclicker_reload_recorded_clicks();
     }
 }
 
 /************************** Wrappers ***************************/
 
-void tsclicker_toggle() {
-    bool status = clicker->toggle();
+std::string tsclicker_plugin_data_folder() {
+    char current_path[MAX_PATH] = { 0 };
     
-    std::string message = "TS clicker | ";
-    message += (status ? "on" : "off");
-    ts3Functions.printMessageToCurrentTab(message.c_str());
+    HMODULE module = NULL;
+    if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR) &ts3plugin_init, &module) == 0) {
+        return false;
+    }
+
+    int length = GetModuleFileNameA(module, current_path, MAX_PATH);
+
+    if (length == 0) {
+        return false;
+    }
+
+    std::string::size_type pos = std::string(current_path).find_last_of(".dll");
+    std::string result = std::string(current_path).substr(0, pos-3);
+    
+    return result;
 }
 
-void tsclicker_reload() {
-    bool status = clicker->update_recorded_clicks();
-    
-    std::string message = "TS clicker | ";
-    message += (status ? "caricato" : "non caricato");
-    ts3Functions.printMessageToCurrentTab(message.c_str());
+void tsclicker_toggle() {
+    bool status = config_ui->get_clicker();
+    status = !status;
+    config_ui->set_clicker(status);
+}
+
+void tsclicker_toggle_left_click() {
+    bool status = config_ui->get_click_left();
+    status = !status;
+    config_ui->set_click_left(status);
+}
+
+void tsclicker_toggle_right_click() {
+    bool status = config_ui->get_click_right();
+    status = !status;
+    config_ui->set_click_right(status);
+}
+
+void tsclicker_toggle_recorded_clicks() {
+    bool status = config_ui->get_recorded();
+    status = !status;
+    config_ui->set_recorded(status);
+}
+
+void tsclicker_reload_recorded_clicks() {
+    clicker->update_recorded_clicks();
 }

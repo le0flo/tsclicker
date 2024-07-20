@@ -1,15 +1,14 @@
 #include "clicker.h"
 
 Clicker::Clicker() {
-    this->running = false;
+    running = false;
 
-    this->using_recorded_clicks = false;
+    cps = 16;
+    click_left = true;
+    click_right = false;
 
-    this->cps = 16;
-    this->left_click = true;
-    this->right_click = false;
-
-    this->intervals.push_back(1000 / cps);
+    intervals.push_back(1000 / cps);
+    using_recorded_clicks = false;
 }
 
 DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
@@ -26,12 +25,12 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
         foreground_window = GetForegroundWindow();
 
         if ((FindWindowA(("LWJGL"), NULL) == foreground_window || FindWindowA(("GLFW30"), NULL) == foreground_window)) {
-            if (GetAsyncKeyState(VK_LBUTTON) && instance->left_click) {
+            if (GetAsyncKeyState(VK_LBUTTON) && instance->click_left) {
                 SendMessageA(foreground_window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(0, 0));
                 SendMessageA(foreground_window, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(0, 0));
             }
 
-            if (GetAsyncKeyState(VK_RBUTTON) && instance->right_click) {
+            if (GetAsyncKeyState(VK_RBUTTON) && instance->click_right) {
                 SendMessageA(foreground_window, WM_RBUTTONDOWN, MK_RBUTTON, MAKELPARAM(0, 0));
                 SendMessageA(foreground_window, WM_RBUTTONUP, MK_RBUTTON, MAKELPARAM(0, 0));
             }
@@ -48,45 +47,55 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
     return 0;
 }
 
-bool Clicker::toggle() {
+void Clicker::forcestop() {
     if (running) {
         running = false;
         WaitForSingleObject(thread, INFINITE);
-    } else {
-        running = true;
+    }
+}
+
+int Clicker::enable_clicker(bool toggle) {
+    if (running == toggle) {
+        return 0;
+    }
+
+    running = toggle;
+
+    if (running) {
         thread = CreateThread(NULL, 0, clicker, this, 0, &thread_id);
         if (thread == NULL) {
             running = false;
+            return -1;
         }
+    } else {
+        WaitForSingleObject(thread, INFINITE);
     }
-    
-    return running;
+
+    return 1;
 }
 
-void Clicker::use_recorded_clicks(bool using_recorded_clicks) {
-    this->using_recorded_clicks = using_recorded_clicks;
+void Clicker::set_cps(int cps) {
+    this->cps = cps;
+}
 
-    if (this->using_recorded_clicks) {
+void Clicker::enable_click_left(bool toggle) {
+    click_left = toggle;
+}
+
+void Clicker::enable_click_right(bool toggle) {
+    click_right = toggle;
+}
+
+void Clicker::enable_recorded_clicks(bool toggle) {
+    using_recorded_clicks = toggle;
+
+    if (using_recorded_clicks) {
         update_recorded_clicks();
     }
 }
 
 bool Clicker::update_recorded_clicks() {
-    char current_path[MAX_PATH] = { 0 };
-    
-    HMODULE module = NULL;
-    if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR) &dummy_function, &module) == 0) {
-        return false;
-    }
-
-    int length = GetModuleFileNameA(module, current_path, MAX_PATH);
-
-    if (length == 0) {
-        return false;
-    }
-
-    std::string::size_type pos = std::string(current_path).find_last_of("\\/");
-    std::string clicks_file_path = std::string(current_path).substr(0, pos).append("\\clicks.txt");
+    std::string clicks_file_path = tsclicker_plugin_data_folder().append("\\clicks.txt");
 
     std::fstream clicks_file;
     clicks_file.open(clicks_file_path, std::ios::in);
@@ -104,27 +113,4 @@ bool Clicker::update_recorded_clicks() {
     }
 
     return false;
-}
-
-void Clicker::set_cps(int cps) {
-    this->cps = cps;
-}
-
-void Clicker::set_left_click(bool left_click) {
-    this->left_click = left_click;
-}
-
-void Clicker::set_right_click(bool right_click) {
-    this->right_click = right_click;
-}
-
-void Clicker::forcestop() {
-    if (running) {
-        running = false;
-        WaitForSingleObject(thread, INFINITE);
-    }
-}
-
-void dummy_function() {
-    std::cout << "leo was here" << std::endl;
 }
