@@ -5,6 +5,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <thread>
 #include <time.h>
 #include <Windows.h>
 
@@ -25,6 +27,8 @@ private:
 
     bool using_recorded_clicks;
     std::vector<int> intervals;
+
+    void sleep(unsigned int* iteration);
 
 public:
     Clicker();

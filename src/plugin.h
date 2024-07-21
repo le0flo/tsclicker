@@ -10,7 +10,7 @@
 #define PLUGINS_EXPORTDLL __declspec(dllexport)
 
 #define PLUGIN_NAME "TS clicker"
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define PLUGIN_AUTHOR "Bestemmie"
 #define PLUGIN_DESCRIPTION "Questo plugin si trasforma in un simpatico autoclicker per minecraft 1.8.9."
 
