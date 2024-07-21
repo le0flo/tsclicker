@@ -19,7 +19,7 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
     }
 
     HWND foreground_window;
-    int iteration = 0;
+    unsigned int iteration = 0;
 
     while (instance->running) {
         foreground_window = GetForegroundWindow();
@@ -36,15 +36,19 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
             }
         }
         
-        if (instance->using_recorded_clicks) {
-            Sleep(instance->intervals[iteration % instance->intervals.size()] * 1.5);
-            iteration++;
-        } else {
-            Sleep(1000 / instance->cps);
-        }
+        instance->sleep(&iteration);
     }
 
     return 0;
+}
+
+void Clicker::sleep(unsigned int* iteration) {
+    if (using_recorded_clicks) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(intervals[*iteration % intervals.size()]));
+        iteration++;
+    } else {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / cps));
+    }
 }
 
 void Clicker::forcestop() {
