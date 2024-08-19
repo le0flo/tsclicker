@@ -17,14 +17,13 @@
 
 #include "plugin.h"
 #include "clicker.h"
+#include "recorder.h"
 #include "configui.h"
 
 static struct TS3Functions ts3Functions;
 
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
 #define snprintf sprintf_s
-
-#define PLUGIN_API_VERSION 26
 
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
@@ -36,6 +35,7 @@ static struct TS3Functions ts3Functions;
 static char* pluginID = NULL;
 
 Clicker* clicker;
+Recorder* recorder;
 ConfigUi* config_ui;
 
 const char* ts3plugin_name() {
@@ -74,7 +74,9 @@ int ts3plugin_init() {
     ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, pluginID);
 
     clicker = new Clicker();
-    config_ui = new ConfigUi(clicker);
+    recorder = new Recorder();
+
+    config_ui = new ConfigUi(clicker, recorder);
     config_ui->save_settings();
 
     return 0;
@@ -86,6 +88,9 @@ void ts3plugin_shutdown() {
 
     clicker->forcestop();
     delete clicker;
+
+    recorder->forcestop();
+    delete recorder;
 
     if (pluginID) {
         free(pluginID);
@@ -137,7 +142,7 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
     END_CREATE_HOTKEYS;
 }
 
-/************************** Callbacks ***************************/
+// Event handlers
 
 void ts3plugin_onHotkeyEvent(const char* keyword) {
     std::string hotkey = std::string(keyword);
@@ -155,7 +160,7 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
     }
 }
 
-/************************** Wrappers ***************************/
+// Hotkeys callbacks
 
 std::string tsclicker_plugin_data_folder() {
     char current_path[MAX_PATH] = { 0 };

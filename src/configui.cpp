@@ -1,7 +1,8 @@
 #include "configui.h"
 
-ConfigUi::ConfigUi(Clicker* clicker, QWidget* parent) : QWidget(parent) {
+ConfigUi::ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent) : QWidget(parent) {
     this->clicker = clicker;
+    this->recorder = recorder;
 
     settings = new QSettings("Bestemmie", "TS clicker");
     layout = new QVBoxLayout();
@@ -19,8 +20,12 @@ ConfigUi::ConfigUi(Clicker* clicker, QWidget* parent) : QWidget(parent) {
 
     label_recorded = new QLabel();
     toggle_recorded = new QCheckBox();
-    reload_recorded = new QPushButton();
-    connect(reload_recorded, &QPushButton::released, this, &ConfigUi::reload_recorded_button);
+
+    load_recording = new QPushButton();
+    connect(load_recording, &QPushButton::released, this, &ConfigUi::load_recording_button);
+
+    record = new QPushButton();
+    connect(record, &QPushButton::released, this, &ConfigUi::record_button);
 
     save = new QPushButton();
     connect(save, &QPushButton::released, this, &ConfigUi::save_settings_button);
@@ -45,7 +50,9 @@ ConfigUi::~ConfigUi() {
 
     delete label_recorded;
     delete toggle_recorded;
-    delete reload_recorded;
+
+    delete load_recording;
+    delete record;
 
     delete save;
 }
@@ -70,31 +77,34 @@ void ConfigUi::setup_window() {
     selector_cps->setValue(16);
     layout->addWidget(selector_cps);
 
-    label_click_left->setText("Tasto sinistro:");
+    label_click_left->setText("Left click:");
     layout->addWidget(label_click_left);
 
     toggle_click_left->setTristate(false);
     toggle_click_left->setCheckState(Qt::CheckState::Checked);
     layout->addWidget(toggle_click_left);
 
-    label_click_right->setText("Tasto destro:");
+    label_click_right->setText("Right click:");
     layout->addWidget(label_click_right);
 
     toggle_click_right->setTristate(false);
     toggle_click_right->setCheckState(Qt::CheckState::Unchecked);
     layout->addWidget(toggle_click_right);
 
-    label_recorded->setText("Usare i click registrati:");
+    label_recorded->setText("Use recorded clicks:");
     layout->addWidget(label_recorded);
 
     toggle_recorded->setTristate(false);
     toggle_recorded->setCheckState(Qt::CheckState::Unchecked);
     layout->addWidget(toggle_recorded);
 
-    reload_recorded->setText("Carica la registrazione dei click");
-    layout->addWidget(reload_recorded);
+    load_recording->setText("Load");
+    layout->addWidget(load_recording);
 
-    save->setText("Salva");
+    record->setText("Record");
+    layout->addWidget(record);
+
+    save->setText("Save");
     layout->addWidget(save);
 }
 
@@ -112,6 +122,8 @@ void ConfigUi::save_settings() {
     clicker->enable_click_left(get_click_left());
     clicker->enable_click_right(get_click_right());
 }
+
+// Getters and setters
 
 bool ConfigUi::get_clicker() {
     return settings->value("clicker").toBool();
@@ -173,13 +185,15 @@ void ConfigUi::set_recorded(bool value) {
     save_settings();
 }
 
+// Button callbacks
+
 void ConfigUi::save_settings_button() {
     save_settings();
 
-    MessageBoxA(0, "Impostazioni salvate", "Conferma", MB_OK);
+    MessageBoxA(0, "Settings saved", "Continue", MB_OK);
 }
 
-void ConfigUi::reload_recorded_button() {
+void ConfigUi::load_recording_button() {
     bool status = clicker->update_recorded_clicks();
 
     if (status) {
@@ -187,4 +201,8 @@ void ConfigUi::reload_recorded_button() {
     } else {
         MessageBoxA(0, "Impossibile leggere la registrazione dei click", "Errore", MB_OK);
     }
+}
+
+void ConfigUi::record_button() {
+    // Record
 }
