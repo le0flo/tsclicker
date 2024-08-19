@@ -13,11 +13,13 @@
 
 #include "plugin.h"
 #include "clicker.h"
+#include "recorder.h"
 
 class ConfigUi : public QWidget {
 
 private:
     Clicker* clicker;
+    Recorder* recorder;
 
     QSettings* settings;
     QVBoxLayout* layout;
@@ -35,14 +37,16 @@ private:
 
     QLabel* label_recorded;
     QCheckBox* toggle_recorded;
-    QPushButton* reload_recorded;
+
+    QPushButton* load_recording;
+    QPushButton* record;
 
     QPushButton* save;
 
     void setup_window();
 
 public:
-    ConfigUi(Clicker* clicker, QWidget* parent = 0);
+    ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent = 0);
     ~ConfigUi();
 
     void save_settings();
@@ -59,7 +63,8 @@ public:
     void set_recorded(bool value);
     
     void save_settings_button();
-    void reload_recorded_button();
+    void load_recording_button();
+    void record_button();
 };
 
 #endif

@@ -7,7 +7,6 @@
 #include <vector>
 #include <chrono>
 #include <thread>
-#include <time.h>
 #include <Windows.h>
 
 #include "plugin.h"
@@ -34,14 +33,14 @@ public:
     Clicker();
 
     void forcestop();
+    
+    bool update_recorded_clicks();
 
     int enable_clicker(bool toggle);
     void set_cps(int cps);
     void enable_click_left(bool toggle);
     void enable_click_right(bool toggle);
-
     void enable_recorded_clicks(bool toggle);
-    bool update_recorded_clicks();
 };
 
 #endif
