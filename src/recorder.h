@@ -25,7 +25,6 @@ public:
     Recorder();
 
     void forcestop();
-
     int enable_recorder(bool toggle);
     void save_recorded_clicks();
 };

@@ -75,9 +75,7 @@ int ts3plugin_init() {
 
     clicker = new Clicker();
     recorder = new Recorder();
-
     config_ui = new ConfigUi(clicker, recorder);
-    config_ui->save_settings();
 
     return 0;
 }

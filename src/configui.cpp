@@ -53,7 +53,6 @@ ConfigUi::~ConfigUi() {
 
     delete load_recording;
     delete record;
-
     delete save;
 }
 
@@ -187,22 +186,22 @@ void ConfigUi::set_recorded(bool value) {
 
 // Button callbacks
 
-void ConfigUi::save_settings_button() {
-    save_settings();
-
-    MessageBoxA(0, "Settings saved", "Continue", MB_OK);
-}
-
 void ConfigUi::load_recording_button() {
     bool status = clicker->update_recorded_clicks();
 
     if (status) {
-        MessageBoxA(0, "Registrazione dei click caricata", "Conferma", MB_OK);
+        MessageBoxA(0, "Successfully loaded clicks", "Continue", MB_OK);
     } else {
-        MessageBoxA(0, "Impossibile leggere la registrazione dei click", "Errore", MB_OK);
+        MessageBoxA(0, "Couldn't load clicks", "Continue", MB_OK);
     }
 }
 
 void ConfigUi::record_button() {
     // Record
+}
+
+void ConfigUi::save_settings_button() {
+    save_settings();
+
+    MessageBoxA(0, "Settings saved", "Continue", MB_OK);
 }
