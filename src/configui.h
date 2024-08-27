@@ -16,7 +16,6 @@
 #include "recorder.h"
 
 class ConfigUi : public QWidget {
-
 private:
     Clicker* clicker;
     Recorder* recorder;
@@ -40,16 +39,14 @@ private:
 
     QPushButton* load_recording;
     QPushButton* record;
-
     QPushButton* save;
 
     void setup_window();
+    void save_settings();
 
 public:
     ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent = 0);
     ~ConfigUi();
-
-    void save_settings();
     
     bool get_clicker();
     int get_cps();
@@ -62,9 +59,9 @@ public:
     void set_click_right(bool value);
     void set_recorded(bool value);
     
-    void save_settings_button();
     void load_recording_button();
     void record_button();
+    void save_settings_button();
 };
 
 #endif
