@@ -5,9 +5,9 @@ ConfigUi::ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent) : QWid
     this->recorder = recorder;
 
     settings = new QSettings("Bestemmie", "TS clicker");
-    tabWidget = new QTabWidget(this);
-    clicker_tab = new QWidget(tabWidget);
-    recorder_tab = new QWidget(tabWidget);
+    tab_widget = new QTabWidget(this);
+    clicker_tab = new QWidget(tab_widget);
+    recorder_tab = new QWidget(tab_widget);
 
     // Clicker widgets
 
@@ -16,18 +16,21 @@ ConfigUi::ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent) : QWid
     click_right = new QCheckBox(clicker_tab);
     cps_slider = new QSlider(clicker_tab);
     cps_label = new QLabel(clicker_tab);
-    save = new QPushButton(clicker_tab);
+    select_cps = new QRadioButton(clicker_tab);
+    select_recording = new QRadioButton(clicker_tab);
+    clicker_save = new QPushButton(clicker_tab);
 
     // Recorder widgets
 
     record = new QPushButton(recorder_tab);
+    recorder_save = new QPushButton(recorder_tab);
 
     setup_window();
 }
 
 ConfigUi::~ConfigUi() {
     delete settings;
-    delete tabWidget;
+    delete tab_widget;
     delete clicker_tab;
     delete recorder_tab;
 
@@ -38,20 +41,23 @@ ConfigUi::~ConfigUi() {
     delete click_right;
     delete cps_slider;
     delete cps_label;
-    delete save;
+    delete select_cps;
+    delete select_recording;
+    delete clicker_save;
 
     // Recorder widgets
 
     delete record;
+    delete recorder_save;
 }
 
 void ConfigUi::setup_window() {
     setWindowTitle("TS clicker settings");
     resize(1000, 550);
 
-    tabWidget->setGeometry(QRect(0, 0, 1000, 550));
-    tabWidget->addTab(clicker_tab, "Clicker");
-    tabWidget->addTab(recorder_tab, "Recorder");
+    tab_widget->setGeometry(QRect(0, 0, 1000, 550));
+    tab_widget->addTab(clicker_tab, "Clicker");
+    tab_widget->addTab(recorder_tab, "Recorder");
 
     setup_clicker_tab();
     setup_recorder_tab();
@@ -79,15 +85,26 @@ void ConfigUi::setup_clicker_tab() {
     cps_label->setText("CPS");
     cps_label->setGeometry(QRect(450, 230, 100, 20));
 
-    save->setText("Save");
-    save->setGeometry(QRect(0, 0, 100, 20));
-    connect(save, &QPushButton::released, this, &ConfigUi::save_settings);
+    select_cps->setText("Static CPS");
+    select_cps->setChecked(true);
+    select_cps->setGeometry(QRect(60, 220, 100, 20));
+    
+    select_recording->setText("Recorded clicks");
+    select_recording->setGeometry(QRect(60, 240, 100, 20));
+
+    clicker_save->setText("Save");
+    clicker_save->setGeometry(QRect(0, 0, 100, 40));
+    connect(clicker_save, &QPushButton::released, this, &ConfigUi::save_settings);
 }
 
 void ConfigUi::setup_recorder_tab() {
     record->setText("Start recording");
-    record->setGeometry(QRect(0, 0, 100, 20));
+    record->setGeometry(QRect(0, 0, 100, 40));
     connect(record, &QPushButton::released, this, &ConfigUi::start_recording);
+
+    recorder_save->setText("Save the recording");
+    recorder_save->setGeometry(QRect(0, 50, 100, 40));
+    connect(recorder_save, &QPushButton::released, this, &ConfigUi::save_intervals);
 }
 
 // Button callbacks
@@ -110,6 +127,10 @@ void ConfigUi::start_recording() {
     } else {
         record->setText("Start recording");
     }
+}
+
+void ConfigUi::save_intervals() {
+    recorder->save_intervals(this, tsclicker_plugin_data_folder().c_str());
 }
 
 // Setters

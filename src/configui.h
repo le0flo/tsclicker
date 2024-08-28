@@ -6,6 +6,7 @@
 #include <QtWidgets\QTabWidget>
 #include <QtWidgets\QWidget>
 #include <QtWidgets\QCheckBox>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets\QSlider>
 #include <QtWidgets\QLabel>
 #include <QtWidgets\QPushButton>
@@ -20,7 +21,7 @@ private:
     Recorder* recorder;
 
     QSettings* settings;
-    QTabWidget* tabWidget;
+    QTabWidget* tab_widget;
     QWidget* clicker_tab;
     QWidget* recorder_tab;
 
@@ -31,11 +32,14 @@ private:
     QCheckBox* click_right;
     QSlider* cps_slider;
     QLabel* cps_label;
-    QPushButton* save;
+    QRadioButton* select_cps;
+    QRadioButton* select_recording;
+    QPushButton* clicker_save;
 
     // Recorder widgets
 
     QPushButton* record;
+    QPushButton* recorder_save;
 
     void setup_window();
     void setup_clicker_tab();
@@ -43,6 +47,7 @@ private:
 
     void save_settings();
     void start_recording();
+    void save_intervals();
 
 public:
     ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent = 0);
