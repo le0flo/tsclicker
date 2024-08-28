@@ -1,15 +1,14 @@
 #ifndef CONFIGUI_H
 #define CONFIGUI_H
 
-#include <Qt>
-#include <QWidget>
-#include <QSettings>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QSpinBox>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QSound>
+#include <QtCore\Qt>
+#include <QtCore\QSettings>
+#include <QtWidgets\QTabWidget>
+#include <QtWidgets\QWidget>
+#include <QtWidgets\QCheckBox>
+#include <QtWidgets\QSlider>
+#include <QtWidgets\QLabel>
+#include <QtWidgets\QPushButton>
 
 #include "plugin.h"
 #include "clicker.h"
@@ -21,47 +20,37 @@ private:
     Recorder* recorder;
 
     QSettings* settings;
-    QVBoxLayout* layout;
+    QTabWidget* tabWidget;
+    QWidget* clicker_tab;
+    QWidget* recorder_tab;
 
-    QLabel* label_clicker;
-    QCheckBox* toggle_clicker;
+    // Clicker widgets
 
-    QLabel* label_cps;
-    QSpinBox* selector_cps;
-
-    QLabel* label_click_left;
-    QCheckBox* toggle_click_left;
-    QLabel* label_click_right;
-    QCheckBox* toggle_click_right;
-
-    QLabel* label_recorded;
-    QCheckBox* toggle_recorded;
-
-    QPushButton* load_recording;
-    QPushButton* record;
+    QCheckBox* clicker_toggle;
+    QCheckBox* click_left;
+    QCheckBox* click_right;
+    QSlider* cps_slider;
+    QLabel* cps_label;
     QPushButton* save;
 
+    // Recorder widgets
+
+    QPushButton* record;
+
     void setup_window();
+    void setup_clicker_tab();
+    void setup_recorder_tab();
+
     void save_settings();
+    void start_recording();
 
 public:
     ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent = 0);
     ~ConfigUi();
-    
-    bool get_clicker();
-    int get_cps();
-    bool get_click_left();
-    bool get_click_right();
-    bool get_recorded();
 
-    void set_clicker(bool value);
-    void set_click_left(bool value);
-    void set_click_right(bool value);
-    void set_recorded(bool value);
-    
-    void load_recording_button();
-    void record_button();
-    void save_settings_button();
+    void toggle_clicker();
+    void toggle_click_left();
+    void toggle_click_right();
 };
 
 #endif

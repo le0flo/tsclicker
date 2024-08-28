@@ -16,17 +16,17 @@ private:
 
     static DWORD WINAPI recorder(LPVOID lpArg);
     bool is_cursor_visible();
-    long long get_current_ms();
+    long long current_ms();
+    void save_intervals();
 
     bool running;
     std::vector<long long> intervals;
 
 public:
     Recorder();
-
     void forcestop();
-    int enable_recorder(bool toggle);
-    void save_recorded_clicks();
+
+    bool toggle_recorder();
 };
 
 #endif

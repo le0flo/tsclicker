@@ -131,12 +131,10 @@ static struct PluginHotkey* createHotkey(const char* keyword, const char* descri
     assert(n == sz);
 
 void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
-    BEGIN_CREATE_HOTKEYS(5);
-    CREATE_HOTKEY("tsclicker_toggle", "Toggle");
-    CREATE_HOTKEY("tsclicker_toggle_left_click", "Toggle left click");
-    CREATE_HOTKEY("tsclicker_toggle_right_click", "Toggle right click");
-    CREATE_HOTKEY("tsclicker_toggle_recorded_clicks", "Toggle recorded clicks");
-    CREATE_HOTKEY("tsclicker_reload", "Reload recorded clicks");
+    BEGIN_CREATE_HOTKEYS(3);
+    CREATE_HOTKEY("tsclicker_toggle", "Toggle clicker");
+    CREATE_HOTKEY("tsclicker_enable_left_click", "Enable/Disable left clicker");
+    CREATE_HOTKEY("tsclicker_enable_right_click", "Enable/Disable right clicker");
     END_CREATE_HOTKEYS;
 }
 
@@ -146,19 +144,15 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
     std::string hotkey = std::string(keyword);
 
     if (hotkey == "tsclicker_toggle") {
-        tsclicker_toggle();
-    } else if (hotkey == "tsclicker_toggle_left_click") {
-        tsclicker_toggle_left_click();
-    } else if (hotkey == "tsclicker_toggle_right_click") {
-        tsclicker_toggle_right_click();
-    } else if (hotkey == "tsclicker_toggle_recorded_clicks") {
-        tsclicker_toggle_recorded_clicks();
-    } else if (hotkey == "tsclicker_reload") {
-        tsclicker_reload_recorded_clicks();
+        config_ui->toggle_clicker();
+    } else if (hotkey == "tsclicker_enable_left_click") {
+        config_ui->toggle_click_left();
+    } else if (hotkey == "tsclicker_enable_right_click") {
+        config_ui->toggle_click_right();
     }
 }
 
-// Hotkeys callbacks
+// Utility functions
 
 std::string tsclicker_plugin_data_folder() {
     char current_path[MAX_PATH] = { 0 };
@@ -178,32 +172,4 @@ std::string tsclicker_plugin_data_folder() {
     std::string result = std::string(current_path).substr(0, pos-3);
     
     return result;
-}
-
-void tsclicker_toggle() {
-    bool status = config_ui->get_clicker();
-    status = !status;
-    config_ui->set_clicker(status);
-}
-
-void tsclicker_toggle_left_click() {
-    bool status = config_ui->get_click_left();
-    status = !status;
-    config_ui->set_click_left(status);
-}
-
-void tsclicker_toggle_right_click() {
-    bool status = config_ui->get_click_right();
-    status = !status;
-    config_ui->set_click_right(status);
-}
-
-void tsclicker_toggle_recorded_clicks() {
-    bool status = config_ui->get_recorded();
-    status = !status;
-    config_ui->set_recorded(status);
-}
-
-void tsclicker_reload_recorded_clicks() {
-    clicker->update_recorded_clicks();
 }

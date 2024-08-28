@@ -8,6 +8,7 @@
 #include <chrono>
 #include <thread>
 #include <Windows.h>
+#include <QtCore\QSettings>
 
 #include "plugin.h"
 
@@ -20,22 +21,23 @@ private:
     void sleep(unsigned int* iteration);
 
     bool running;
-    int cps;
+    bool using_intervals;
     bool click_left;
     bool click_right;
-    bool using_recorded_clicks;
+    int cps;
     std::vector<int> intervals;
 
 public:
     Clicker();
-
     void forcestop();
-    bool update_recorded_clicks();
-    int enable_clicker(bool toggle);
-    void set_cps(int cps);
+    void sync(QSettings* settings);
+
+    void enable_clicker(bool toggle);
+    void enable_intervals(bool toggle);
     void enable_click_left(bool toggle);
     void enable_click_right(bool toggle);
-    void enable_recorded_clicks(bool toggle);
+    void set_cps(int cps);
+    void set_intervals(std::vector<int> intervals);
 };
 
 #endif
