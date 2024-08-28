@@ -13,7 +13,6 @@ DWORD WINAPI Recorder::recorder(LPVOID lpArg) {
 
     HWND foreground_window;
     bool is_window_minecraft;
-    bool up = true;
 
     instance->intervals.clear();
 
@@ -21,21 +20,20 @@ DWORD WINAPI Recorder::recorder(LPVOID lpArg) {
         foreground_window = GetForegroundWindow();
         is_window_minecraft = FindWindowA(("LWJGL"), NULL) == foreground_window || FindWindowA(("GLFW30"), NULL) == foreground_window;
 
-
         if (GetAsyncKeyState(VK_LBUTTON) && is_window_minecraft && instance->is_cursor_visible()) {
-            if (up) {
-                instance->intervals.push_back(instance->get_current_ms());
-                up = false;
-            } else {
-                instance->intervals.push_back(instance->get_current_ms());
-                up = true;
+            instance->intervals.push_back(instance->current_ms());
+
+            while (GetAsyncKeyState(VK_LBUTTON)) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
+
+            instance->intervals.push_back(instance->current_ms());
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    instance->save_recorded_clicks();
+    instance->save_intervals();
 
     return 0;
 }
@@ -50,8 +48,12 @@ bool Recorder::is_cursor_visible() {
     return false;
 }
 
-long long Recorder::get_current_ms() {
+long long Recorder::current_ms() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void Recorder::save_intervals() {
+    // TODO salvare due file, per i due intervalli rispettivi. Oppure uno, capire come strutturare
 }
 
 void Recorder::forcestop() {
@@ -61,26 +63,19 @@ void Recorder::forcestop() {
     }
 }
 
-int Recorder::enable_recorder(bool toggle) {
-    if (running == toggle) {
-        return 0;
-    }
+// Setters
 
-    running = toggle;
+bool Recorder::toggle_recorder() {
+    running = !running;
 
     if (running) {
         thread = CreateThread(NULL, 0, recorder, this, 0, &thread_id);
         if (thread == NULL) {
             running = false;
-            return -1;
         }
     } else {
         WaitForSingleObject(thread, INFINITE);
     }
 
-    return 1;
-}
-
-void Recorder::save_recorded_clicks() {
-    // Save
+    return running;
 }

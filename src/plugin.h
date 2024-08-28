@@ -34,11 +34,8 @@ PLUGINS_EXPORTDLL void ts3plugin_onHotkeyEvent(const char* keyword);
 
 }
 
+// Utility functions
+
 std::string tsclicker_plugin_data_folder();
-void tsclicker_toggle();
-void tsclicker_toggle_left_click();
-void tsclicker_toggle_right_click();
-void tsclicker_toggle_recorded_clicks();
-void tsclicker_reload_recorded_clicks();
 
 #endif

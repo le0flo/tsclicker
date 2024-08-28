@@ -2,12 +2,10 @@
 
 Clicker::Clicker() {
     running = false;
-
-    cps = 16;
+    using_intervals = false;
     click_left = true;
     click_right = false;
-
-    using_recorded_clicks = false;
+    cps = 16;
 }
 
 DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
@@ -22,6 +20,8 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
     bool is_window_minecraft;
 
     while (instance->running) {
+        // TODO reimplementare la riproduzione dei click con l'intervallo tra un click e un altro + durata del tasto premuto
+
         foreground_window = GetForegroundWindow();
         is_window_minecraft = FindWindowA(("LWJGL"), NULL) == foreground_window || FindWindowA(("GLFW30"), NULL) == foreground_window;
 
@@ -44,9 +44,9 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
 }
 
 void Clicker::sleep(unsigned int* iteration) {
-    if (using_recorded_clicks) {
+    if (using_intervals) {
         std::this_thread::sleep_for(std::chrono::milliseconds(intervals[*iteration % intervals.size()]));
-        iteration++;
+        (*iteration)++;
     } else {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000 / cps));
     }
@@ -59,32 +59,18 @@ void Clicker::forcestop() {
     }
 }
 
-bool Clicker::update_recorded_clicks() {
-    std::string clicks_file_path = tsclicker_plugin_data_folder().append("\\clicks.txt");
-
-    std::fstream clicks_file;
-    clicks_file.open(clicks_file_path, std::ios::in);
-
-    if (clicks_file.is_open()) {
-        intervals.clear();
-        std::string line;
-
-        while (std::getline(clicks_file, line)) {
-            int interval = atoi(line.c_str());
-            intervals.push_back(interval);
-        }
-
-        return true;
-    }
-
-    return false;
+void Clicker::sync(QSettings* settings) {
+    enable_clicker(settings->value("clicker_toggle").toBool());
+    enable_click_left(settings->value("click_left").toBool());
+    enable_click_right(settings->value("click_right").toBool());
+    set_cps(settings->value("cps").toInt());
 }
 
-// Getters and setters
+// Setters
 
-int Clicker::enable_clicker(bool toggle) {
+void Clicker::enable_clicker(bool toggle) {
     if (running == toggle) {
-        return 0;
+        return;
     }
 
     running = toggle;
@@ -93,17 +79,14 @@ int Clicker::enable_clicker(bool toggle) {
         thread = CreateThread(NULL, 0, clicker, this, 0, &thread_id);
         if (thread == NULL) {
             running = false;
-            return -1;
         }
     } else {
         WaitForSingleObject(thread, INFINITE);
     }
-
-    return 1;
 }
 
-void Clicker::set_cps(int cps) {
-    this->cps = cps;
+void Clicker::enable_intervals(bool toggle) {
+    using_intervals = toggle;
 }
 
 void Clicker::enable_click_left(bool toggle) {
@@ -114,10 +97,10 @@ void Clicker::enable_click_right(bool toggle) {
     click_right = toggle;
 }
 
-void Clicker::enable_recorded_clicks(bool toggle) {
-    using_recorded_clicks = toggle;
+void Clicker::set_cps(int cps) {
+    this->cps = cps;
+}
 
-    if (using_recorded_clicks) {
-        update_recorded_clicks();
-    }
+void Clicker::set_intervals(std::vector<int> intervals) {
+    this->intervals = std::vector<int>(intervals);
 }

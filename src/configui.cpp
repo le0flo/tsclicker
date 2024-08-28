@@ -5,203 +5,141 @@ ConfigUi::ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent) : QWid
     this->recorder = recorder;
 
     settings = new QSettings("Bestemmie", "TS clicker");
-    layout = new QVBoxLayout();
+    tabWidget = new QTabWidget(this);
+    clicker_tab = new QWidget(tabWidget);
+    recorder_tab = new QWidget(tabWidget);
 
-    label_clicker = new QLabel();
-    toggle_clicker = new QCheckBox();
+    // Clicker widgets
 
-    label_cps = new QLabel();
-    selector_cps = new QSpinBox();
+    clicker_toggle = new QCheckBox(clicker_tab);
+    click_left = new QCheckBox(clicker_tab);
+    click_right = new QCheckBox(clicker_tab);
+    cps_slider = new QSlider(clicker_tab);
+    cps_label = new QLabel(clicker_tab);
+    save = new QPushButton(clicker_tab);
 
-    label_click_left = new QLabel();
-    toggle_click_left = new QCheckBox(); 
-    label_click_right = new QLabel();
-    toggle_click_right = new QCheckBox();
+    // Recorder widgets
 
-    label_recorded = new QLabel();
-    toggle_recorded = new QCheckBox();
-
-    load_recording = new QPushButton();
-    connect(load_recording, &QPushButton::released, this, &ConfigUi::load_recording_button);
-
-    record = new QPushButton();
-    connect(record, &QPushButton::released, this, &ConfigUi::record_button);
-
-    save = new QPushButton();
-    connect(save, &QPushButton::released, this, &ConfigUi::save_settings_button);
+    record = new QPushButton(recorder_tab);
 
     setup_window();
 }
 
 ConfigUi::~ConfigUi() {
     delete settings;
-    delete layout;
+    delete tabWidget;
+    delete clicker_tab;
+    delete recorder_tab;
 
-    delete label_clicker;
-    delete toggle_clicker;
+    // Clicker widgets
 
-    delete label_cps;
-    delete selector_cps;
-
-    delete label_click_left;
-    delete toggle_click_left;
-    delete label_click_right;
-    delete toggle_click_right;
-
-    delete label_recorded;
-    delete toggle_recorded;
-
-    delete load_recording;
-    delete record;
+    delete clicker_toggle;
+    delete click_left;
+    delete click_right;
+    delete cps_slider;
+    delete cps_label;
     delete save;
+
+    // Recorder widgets
+
+    delete record;
 }
 
 void ConfigUi::setup_window() {
     setWindowTitle("TS clicker settings");
-    resize(500, 300);
-    setLayout(layout);
+    resize(1000, 550);
 
-    label_clicker->setText("Clicker:");
-    layout->addWidget(label_clicker);
+    tabWidget->setGeometry(QRect(0, 0, 1000, 550));
+    tabWidget->addTab(clicker_tab, "Clicker");
+    tabWidget->addTab(recorder_tab, "Recorder");
 
-    toggle_clicker->setTristate(false);
-    toggle_clicker->setCheckState(Qt::CheckState::Unchecked);
-    layout->addWidget(toggle_clicker);
+    setup_clicker_tab();
+    setup_recorder_tab();
+}
 
-    label_cps->setText("CPS:");
-    layout->addWidget(label_cps);
+void ConfigUi::setup_clicker_tab() {
+    clicker_toggle->setText("Enabled");
+    clicker_toggle->setCheckState(Qt::CheckState::Unchecked);
+    clicker_toggle->setGeometry(QRect(450, 350, 100, 20));
 
-    selector_cps->setMinimum(6);
-    selector_cps->setMaximum(100);
-    selector_cps->setValue(16);
-    layout->addWidget(selector_cps);
+    click_left->setText("Left");
+    click_left->setCheckState(Qt::CheckState::Unchecked);
+    click_left->setGeometry(QRect(300, 100, 100, 20));
 
-    label_click_left->setText("Left click:");
-    layout->addWidget(label_click_left);
+    click_right->setText("Right");
+    click_right->setCheckState(Qt::CheckState::Unchecked);
+    click_right->setGeometry(QRect(700, 100, 100, 20));
 
-    toggle_click_left->setTristate(false);
-    toggle_click_left->setCheckState(Qt::CheckState::Checked);
-    layout->addWidget(toggle_click_left);
+    cps_slider->setMinimum(6);
+    cps_slider->setMaximum(60);
+    cps_slider->setValue(16);
+    cps_slider->setOrientation(Qt::Horizontal);
+    cps_slider->setGeometry(QRect(450, 250, 100, 20));
 
-    label_click_right->setText("Right click:");
-    layout->addWidget(label_click_right);
-
-    toggle_click_right->setTristate(false);
-    toggle_click_right->setCheckState(Qt::CheckState::Unchecked);
-    layout->addWidget(toggle_click_right);
-
-    label_recorded->setText("Use recorded clicks:");
-    layout->addWidget(label_recorded);
-
-    toggle_recorded->setTristate(false);
-    toggle_recorded->setCheckState(Qt::CheckState::Unchecked);
-    layout->addWidget(toggle_recorded);
-
-    load_recording->setText("Load");
-    layout->addWidget(load_recording);
-
-    record->setText("Record");
-    layout->addWidget(record);
+    cps_label->setText("CPS");
+    cps_label->setGeometry(QRect(450, 230, 100, 20));
 
     save->setText("Save");
-    layout->addWidget(save);
+    save->setGeometry(QRect(0, 0, 100, 20));
+    connect(save, &QPushButton::released, this, &ConfigUi::save_settings);
 }
 
-void ConfigUi::save_settings() {
-    settings->setValue("clicker", toggle_clicker->isChecked());
-    settings->setValue("cps", selector_cps->value());
-    settings->setValue("recorded", toggle_recorded->isChecked());
-    settings->setValue("click_left", toggle_click_left->isChecked());
-    settings->setValue("click_right", toggle_click_right->isChecked());
-    settings->sync();
-
-    clicker->enable_clicker(get_clicker());
-    clicker->set_cps(get_cps());
-    clicker->enable_recorded_clicks(get_recorded());
-    clicker->enable_click_left(get_click_left());
-    clicker->enable_click_right(get_click_right());
-}
-
-// Getters and setters
-
-bool ConfigUi::get_clicker() {
-    return settings->value("clicker").toBool();
-}
-
-int ConfigUi::get_cps() {
-    return settings->value("cps").toInt();
-}
-
-bool ConfigUi::get_click_left() {
-    return settings->value("click_left").toBool();
-}
-
-bool ConfigUi::get_click_right() {
-    return settings->value("click_right").toBool();
-}
-
-bool ConfigUi::get_recorded() {
-    return settings->value("recorded").toBool();
-}
-
-void ConfigUi::set_clicker(bool value) {
-    if (value) {
-        toggle_clicker->setCheckState(Qt::CheckState::Checked);
-    } else {
-        toggle_clicker->setCheckState(Qt::CheckState::Unchecked);
-    }
-
-    save_settings();
-}
-
-void ConfigUi::set_click_left(bool value) {
-    if (value) {
-        toggle_click_left->setCheckState(Qt::CheckState::Checked);
-    } else {
-        toggle_click_left->setCheckState(Qt::CheckState::Unchecked);
-    }
-
-    save_settings();
-}
-
-void ConfigUi::set_click_right(bool value) {
-    if (value) {
-        toggle_click_right->setCheckState(Qt::CheckState::Checked);
-    } else {
-        toggle_click_right->setCheckState(Qt::CheckState::Unchecked);
-    }
-
-    save_settings();
-}
-
-void ConfigUi::set_recorded(bool value) {
-    if (value) {
-        toggle_recorded->setCheckState(Qt::CheckState::Checked);
-    } else {
-        toggle_recorded->setCheckState(Qt::CheckState::Unchecked);
-    }
-
-    save_settings();
+void ConfigUi::setup_recorder_tab() {
+    record->setText("Start recording");
+    record->setGeometry(QRect(0, 0, 100, 20));
+    connect(save, &QPushButton::released, this, &ConfigUi::start_recording);
 }
 
 // Button callbacks
 
-void ConfigUi::load_recording_button() {
-    bool status = clicker->update_recorded_clicks();
+void ConfigUi::save_settings() {
+    settings->setValue("clicker_toggle", clicker_toggle->isChecked());
+    settings->setValue("click_left", click_left->isChecked());
+    settings->setValue("click_right", click_right->isChecked());
+    settings->setValue("cps", cps_slider->value());
+    settings->sync();
+    clicker->sync(settings);
+}
+
+void ConfigUi::start_recording() {
+    clicker->forcestop();
+    bool status = recorder->toggle_recorder();
 
     if (status) {
-        MessageBoxA(0, "Successfully loaded clicks", "Continue", MB_OK);
+        record->setText("Stop recording");
     } else {
-        MessageBoxA(0, "Couldn't load clicks", "Continue", MB_OK);
+        record->setText("Start recording");
     }
 }
 
-void ConfigUi::record_button() {
-    // Record
+// Setters
+
+void ConfigUi::toggle_clicker() {
+    if (clicker_toggle->isChecked()) {
+        clicker_toggle->setCheckState(Qt::CheckState::Unchecked);
+    } else {
+        clicker_toggle->setCheckState(Qt::CheckState::Checked);
+    }
+
+    save_settings();
 }
 
-void ConfigUi::save_settings_button() {
-    save_settings();
+void ConfigUi::toggle_click_left() {
+    if (click_left->isChecked()) {
+        click_left->setCheckState(Qt::CheckState::Unchecked);
+    } else {
+        click_left->setCheckState(Qt::CheckState::Checked);
+    }
 
-    MessageBoxA(0, "Settings saved", "Continue", MB_OK);
+    save_settings();
+}
+
+void ConfigUi::toggle_click_right() {
+    if (click_right->isChecked()) {
+        click_right->setCheckState(Qt::CheckState::Unchecked);
+    } else {
+        click_right->setCheckState(Qt::CheckState::Checked);
+    }
+
+    save_settings();
 }
