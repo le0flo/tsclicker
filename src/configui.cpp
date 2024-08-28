@@ -63,7 +63,7 @@ void ConfigUi::setup_clicker_tab() {
     clicker_toggle->setGeometry(QRect(450, 350, 100, 20));
 
     click_left->setText("Left");
-    click_left->setCheckState(Qt::CheckState::Unchecked);
+    click_left->setCheckState(Qt::CheckState::Checked);
     click_left->setGeometry(QRect(300, 100, 100, 20));
 
     click_right->setText("Right");
@@ -87,7 +87,7 @@ void ConfigUi::setup_clicker_tab() {
 void ConfigUi::setup_recorder_tab() {
     record->setText("Start recording");
     record->setGeometry(QRect(0, 0, 100, 20));
-    connect(save, &QPushButton::released, this, &ConfigUi::start_recording);
+    connect(record, &QPushButton::released, this, &ConfigUi::start_recording);
 }
 
 // Button callbacks
