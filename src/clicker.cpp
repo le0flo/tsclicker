@@ -6,6 +6,7 @@ Clicker::Clicker() {
     click_left = true;
     click_right = false;
     cps = 16;
+    intervals.clear();
 }
 
 DWORD WINAPI Clicker::clicker(LPVOID lpArg) {

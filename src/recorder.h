@@ -8,6 +8,9 @@
 #include <chrono>
 #include <thread>
 #include <Windows.h>
+#include <QtCore\Qt>
+#include <QtWidgets\QWidget>
+#include <QtWidgets\QFileDialog>
 
 class Recorder {
 private:
@@ -17,7 +20,6 @@ private:
     static DWORD WINAPI recorder(LPVOID lpArg);
     bool is_cursor_visible();
     long long current_ms();
-    void save_intervals();
 
     bool running;
     std::vector<long long> intervals;
@@ -25,8 +27,8 @@ private:
 public:
     Recorder();
     void forcestop();
-
     bool toggle_recorder();
+    void save_intervals(QWidget* parent, QString path);
 };
 
 #endif
