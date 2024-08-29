@@ -14,6 +14,8 @@
 #define PLUGIN_VERSION "1.3"
 #define PLUGIN_AUTHOR "Bestemmie"
 #define PLUGIN_DESCRIPTION "The best autoclicker on this planet - Feryzz"
+#define PLUGIN_FILEFORMAT ".tsc"
+#define PLUGIN_FILEFORMAT_FILTER "TS clicker intervals (*.tsc)"
 
 extern "C" {
 

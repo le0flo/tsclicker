@@ -9,6 +9,6 @@ copy ..\package.ini .
 mkdir plugins
 mkdir plugins\tsclicker
 copy ..\build\tsclicker.dll .\plugins
-copy ..\clicks.txt .\plugins\tsclicker
+copy ..\test_clicks.tsc .\plugins\tsclicker
 
 cd ..
