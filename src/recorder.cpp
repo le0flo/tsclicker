@@ -38,10 +38,12 @@ DWORD WINAPI Recorder::recorder(LPVOID lpArg) {
 }
 
 bool Recorder::is_cursor_visible() {
-    CURSORINFO ci = { sizeof(CURSORINFO) };
+    CURSORINFO ci = {sizeof(CURSORINFO)};
 
     if (GetCursorInfo(&ci)) {
-        return ci.flags & CURSOR_SHOWING;
+        if (ci.flags == 0 || ci.flags == 2) {
+            return true;
+        }
     }
 
     return false;
