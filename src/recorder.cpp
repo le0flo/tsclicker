@@ -73,24 +73,6 @@ bool Recorder::toggle_recorder() {
     return running;
 }
 
-void Recorder::save_intervals(QWidget* parent, QString path) {
-    if (intervals.size() <= 0) {
-        MessageBoxA(NULL, "No intervals found in memory, try recording again.", "Error", MB_ICONERROR);
-        return;
-    }
-
-    QString filename = QFileDialog::getSaveFileName(parent, "Save the recording", path, "TS clicker intervals (*.tsc)");
-    if (!filename.endsWith(".tsc")) {
-        filename.append(".tsc");
-    }
-
-    std::ofstream output_file;
-    output_file.open(filename.toStdString());
-
-    for (int i=1; i<intervals.size()-1; i+=2) {
-        output_file << intervals.at(i) - intervals.at(i - 1) << ":";
-        output_file << intervals.at(i + 1) - intervals.at(i) << "\n";
-    }
-
-    output_file.close();
+std::vector<long long> Recorder::get_intervals() {
+    return intervals;
 }

@@ -1,15 +1,20 @@
 #ifndef CONFIGUI_H
 #define CONFIGUI_H
 
-#include <QtCore\Qt>
-#include <QtCore\QSettings>
-#include <QtWidgets\QTabWidget>
-#include <QtWidgets\QWidget>
-#include <QtWidgets\QCheckBox>
+#include <iostream>
+#include <string>
+#include <fstream>
+
+#include <QtCore/Qt>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QRadioButton>
-#include <QtWidgets\QSlider>
-#include <QtWidgets\QLabel>
-#include <QtWidgets\QPushButton>
+#include <QtWidgets/QSlider>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QFileDialog>
 
 #include "plugin.h"
 #include "clicker.h"
@@ -20,7 +25,6 @@ private:
     Clicker* clicker;
     Recorder* recorder;
 
-    QSettings* settings;
     QTabWidget* tab_widget;
     QWidget* clicker_tab;
     QWidget* recorder_tab;
@@ -34,24 +38,41 @@ private:
     QLabel* cps_label;
     QRadioButton* select_cps;
     QRadioButton* select_recording;
-    QPushButton* clicker_save;
 
     // Recorder widgets
 
     QPushButton* record;
     QPushButton* recorder_save;
+    QLineEdit* intervals_path;
+    QPushButton* intervals_open;
+
+    // Setups
 
     void setup_window();
     void setup_clicker_tab();
     void setup_recorder_tab();
 
-    void save_settings();
+    // Events
+
+    void on_change();
+    void on_changeslider();
+
+    // Button callbacks
+
     void start_recording();
     void save_intervals();
+    void open_intervals();
+
+    // File operations
+
+    std::tuple<std::vector<int>,std::vector<int>> read_intervals(std::string filename);
+    void write_intervals(std::string filename, std::vector<long long> intervals);
 
 public:
     ConfigUi(Clicker* clicker, Recorder* recorder, QWidget* parent = 0);
     ~ConfigUi();
+
+    // Setters
 
     void toggle_clicker();
     void toggle_click_left();
