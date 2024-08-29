@@ -21,7 +21,7 @@ DWORD WINAPI Recorder::recorder(LPVOID lpArg) {
         foreground_window = GetForegroundWindow();
         is_window_minecraft = FindWindowA(("LWJGL"), NULL) == foreground_window || FindWindowA(("GLFW30"), NULL) == foreground_window;
 
-        if (GetAsyncKeyState(VK_LBUTTON) && is_window_minecraft && !instance->is_cursor_visible()) {
+        if (GetAsyncKeyState(VK_LBUTTON) && is_window_minecraft) {
             instance->intervals.push_back(instance->current_ms());
 
             while (GetAsyncKeyState(VK_LBUTTON)) {
@@ -34,19 +34,10 @@ DWORD WINAPI Recorder::recorder(LPVOID lpArg) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
+    instance->intervals.erase(instance->intervals.begin(), instance->intervals.begin()+4);
+    instance->intervals.erase(instance->intervals.end()-4, instance->intervals.end());
+
     return 0;
-}
-
-bool Recorder::is_cursor_visible() {
-    CURSORINFO ci = {sizeof(CURSORINFO)};
-
-    if (GetCursorInfo(&ci)) {
-        if (ci.flags == 0 || ci.flags == 2) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 long long Recorder::current_ms() {

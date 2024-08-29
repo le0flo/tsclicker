@@ -12,7 +12,6 @@ private:
     DWORD thread_id;
 
     static DWORD WINAPI recorder(LPVOID lpArg);
-    bool is_cursor_visible();
     long long current_ms();
 
     bool running;
