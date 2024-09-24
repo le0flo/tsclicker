@@ -21,12 +21,8 @@ I seguenti passaggi sono per compilare il programma manualmente:
 ### Installazione
 
 Se sai come funzionano i plugin di teamspeak, puoi tranquillamente spostare il plugin compilato nella cartella apposita.
-Nel caso contrario, segui le successive istruzioni per ottenere il pacchetto `.plugin`, per un installazione semplice.
+Nel caso contrario, segui le successive istruzioni per ottenere il pacchetto `.ts3_plugin`, per un installazione semplice.
 
 1. Apri il terminale nella cartella del progetto, ed esegui il file `package.bat`
 
-2. Entra nella cartella `package` con l'explorer e, selezionando tutti i file con la combinazione di tasti `CTRL + A`, usa WinRAR per creare un archivio `.zip`
-
-3. Prendi l'archivio zip generato e rimpiazza l'estensione del file con l'estensione `.ts3_plugin`
-
-4. Per installare il plugin appena generato su Teamspeak 3, doppio click sul file `.ts3_plugin` e seguire il prompt di installazione di Teamspeak 3
+2. Apri il file `tsclicker.ts3_plugin` e segui il prompt di installazione di Teamspeak 3

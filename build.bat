@@ -2,7 +2,6 @@
 
 mkdir build
 cd build
-cls
 
 cl ^
 /I"..\include" ^
