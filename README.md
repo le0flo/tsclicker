@@ -19,4 +19,4 @@ Supporta una cps statici e i valori registrati tramite il registratore interno.
 
 1. Apri il terminale nella cartella del progetto ed esegui lo script `package.bat`
 
-2. Troverai il file `tsclicker.ts3_plugin` nella cartella `package`, eseguilo e procedi con l'installazione.
+2. Troverai il file `tsclicker.ts3_plugin` nella cartella `package`, eseguilo e procedi con l'installazione
