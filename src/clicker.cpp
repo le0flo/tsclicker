@@ -24,18 +24,15 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
         foreground_window = GetForegroundWindow();
         is_window_minecraft = FindWindowA(("LWJGL"), NULL) == foreground_window || FindWindowA(("GLFW30"), NULL) == foreground_window;
 
-        if (is_window_minecraft) {
-            if (GetAsyncKeyState(VK_LBUTTON) && instance->click_left) {
-                SendMessageA(foreground_window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(0, 0));
-            }
-
-            if (GetAsyncKeyState(VK_RBUTTON) && instance->click_right) {
-                SendMessageA(foreground_window, WM_RBUTTONDOWN, MK_RBUTTON, MAKELPARAM(0, 0));    
-            }
-
+        if (is_window_minecraft && GetAsyncKeyState(VK_LBUTTON) && instance->click_left) {
+            SendMessageA(foreground_window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(0, 0));
             instance->pressed_sleep(iteration);
-
             SendMessageA(foreground_window, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(0, 0));
+        }
+
+        if (is_window_minecraft && GetAsyncKeyState(VK_RBUTTON) && instance->click_right) {
+            SendMessageA(foreground_window, WM_RBUTTONDOWN, MK_RBUTTON, MAKELPARAM(0, 0));
+            instance->pressed_sleep(iteration);
             SendMessageA(foreground_window, WM_RBUTTONUP, MK_RBUTTON, MAKELPARAM(0, 0));
         }
 
