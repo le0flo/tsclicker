@@ -7,6 +7,8 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
+#include <iostream>
+
 #define PLUGINS_EXPORTDLL __declspec(dllexport)
 
 #define PLUGIN_API_VERSION 26
