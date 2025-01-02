@@ -1,7 +1,6 @@
 # Teamspeak Clicker
 
 Questo plugin di teamspeak è un semplice autoclicker scritto in C++.
-Supporta una cps statici e i valori registrati tramite il registratore interno.
 
 ### Compilazione
 
