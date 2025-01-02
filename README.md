@@ -7,7 +7,7 @@ Supporta una cps statici e i valori registrati tramite il registratore interno.
 
 1. Scarica l'ultima versione di [Microsoft Visual Studio](https://visualstudio.microsoft.com/)
 2. Scarica il toolkit [Qt 5.12.2](https://download.qt.io/archive/qt/5.12/5.12.2/)
-3. Apri il file .sln con Visual Studio e imposta la target configuration su `Release`
+3. Apri il file `tsclicker.sln` con Visual Studio e imposta la target configuration su `Release`
 4. Compila premendo il tasto run o lo shortcut `Ctrl + B`
 
 ### Installazione
