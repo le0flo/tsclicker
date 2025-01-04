@@ -9,11 +9,11 @@
 #include <assert.h>
 #include <Windows.h>
 
-#include "include/teamspeak/public_definitions.h"
-#include "include/teamspeak/public_errors.h"
-#include "include/teamspeak/public_errors_rare.h"
-#include "include/teamspeak/public_rare_definitions.h"
-#include "include/ts3_functions.h"
+#include "teamspeak/public_definitions.h"
+#include "teamspeak/public_errors.h"
+#include "teamspeak/public_errors_rare.h"
+#include "teamspeak/public_rare_definitions.h"
+#include "ts3_functions.h"
 
 #include "plugin.h"
 #include "clicker.h"
