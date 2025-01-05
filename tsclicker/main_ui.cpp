@@ -4,6 +4,7 @@ MainUi::MainUi(Clicker* clicker, Recorder* recorder, QWidget* parent) : QWidget(
     tab_widget = new QTabWidget(this);
     clicker_tab = new ClickerUi(clicker, tab_widget);
     recorder_tab = new RecorderUi(recorder, tab_widget);
+    injector_tab = new InjectorUi(tab_widget);
 
     this->setup();
 }
@@ -12,6 +13,7 @@ MainUi::~MainUi() {
     delete tab_widget;
     delete clicker_tab;
     delete recorder_tab;
+    delete injector_tab;
 }
 
 void MainUi::setup() {
@@ -21,6 +23,7 @@ void MainUi::setup() {
     tab_widget->setGeometry(QRect(0, 0, 1000, 550));
     tab_widget->addTab(clicker_tab, "Clicker");
     tab_widget->addTab(recorder_tab, "Recorder");
+    tab_widget->addTab(injector_tab, "Injector");
 }
 
 ClickerUi* MainUi::get_clicker() {

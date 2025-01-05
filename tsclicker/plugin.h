@@ -13,9 +13,9 @@
 
 #define PLUGIN_API_VERSION 26
 #define PLUGIN_NAME "TS clicker"
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "2.0"
 #define PLUGIN_AUTHOR "Bestemmie"
-#define PLUGIN_DESCRIPTION "The best autoclicker on this planet - Feryzz"
+#define PLUGIN_DESCRIPTION "Skibidi sigma clicker"
 #define PLUGIN_FILEFORMAT ".tsc"
 #define PLUGIN_FILEFORMAT_FILTER "TS clicker intervals (*.tsc)"
 
