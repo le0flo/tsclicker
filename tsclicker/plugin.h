@@ -38,8 +38,10 @@ PLUGINS_EXPORTDLL void ts3plugin_onHotkeyEvent(const char* keyword);
 
 }
 
-// Utility functions
+namespace plugin {
+	inline std::string intervals_path;
 
-std::string tsclicker_plugin_data_folder();
+	std::string data_folder();
+}
 
 #endif

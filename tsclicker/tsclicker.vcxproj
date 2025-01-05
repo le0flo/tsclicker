@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)include;C:\Qt\Qt5.12.2\5.12.2\msvc2017_64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -132,15 +132,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="clicker.cpp" />
-    <ClCompile Include="configui.cpp" />
+    <ClCompile Include="clicker_ui.cpp" />
+    <ClCompile Include="main_ui.cpp" />
     <ClCompile Include="plugin.cpp" />
     <ClCompile Include="recorder.cpp" />
+    <ClCompile Include="recorder_ui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clicker.h" />
-    <ClInclude Include="configui.h" />
+    <ClInclude Include="clicker_ui.h" />
+    <ClInclude Include="main_ui.h" />
     <ClInclude Include="plugin.h" />
     <ClInclude Include="recorder.h" />
+    <ClInclude Include="recorder_ui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

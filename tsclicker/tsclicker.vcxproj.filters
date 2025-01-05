@@ -18,7 +18,7 @@
     <ClCompile Include="clicker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="configui.cpp">
+    <ClCompile Include="main_ui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="plugin.cpp">
@@ -27,18 +27,30 @@
     <ClCompile Include="recorder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="clicker_ui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recorder_ui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clicker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="configui.h">
+    <ClInclude Include="main_ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="plugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="recorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clicker_ui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recorder_ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

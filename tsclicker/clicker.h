@@ -6,16 +6,10 @@
 #include <thread>
 #include <Windows.h>
 
-#include "plugin.h"
-
 class Clicker {
 private:
     HANDLE thread;
-    DWORD thread_id;
-
     static DWORD WINAPI clicker(LPVOID lpArg);
-    void pressed_sleep(int iteration);
-    void between_sleep(int iteration);
 
     bool running;
     bool using_intervals;
@@ -24,6 +18,9 @@ private:
     int interval;
     std::vector<int> pressed_intervals;
     std::vector<int> between_intervals;
+
+    void pressed_sleep(int iteration);
+    void between_sleep(int iteration);
 
 public:
     Clicker();

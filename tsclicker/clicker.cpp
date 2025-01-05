@@ -1,6 +1,8 @@
 #include "clicker.h"
 
 Clicker::Clicker() {
+    thread = nullptr;
+
     enable_clicker(false);
     enable_intervals(false);
     enable_click_left(true);
@@ -11,7 +13,7 @@ Clicker::Clicker() {
 DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
     Clicker* instance = static_cast<Clicker*>(lpArg);
 
-    if (instance == NULL) {
+    if (instance == nullptr) {
         return -1;
     }
 
@@ -22,7 +24,7 @@ DWORD WINAPI Clicker::clicker(LPVOID lpArg) {
 
     while (instance->running) {
         foreground_window = GetForegroundWindow();
-        is_window_minecraft = FindWindowA(("LWJGL"), NULL) == foreground_window || FindWindowA(("GLFW30"), NULL) == foreground_window;
+        is_window_minecraft = FindWindowA(("LWJGL"), nullptr) == foreground_window || FindWindowA(("GLFW30"), nullptr) == foreground_window;
 
         if (is_window_minecraft && GetAsyncKeyState(VK_LBUTTON) && instance->click_left) {
             SendMessageA(foreground_window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(0, 0));
@@ -74,8 +76,8 @@ void Clicker::enable_clicker(bool toggle) {
     running = toggle;
 
     if (running) {
-        thread = CreateThread(NULL, 0, clicker, this, 0, &thread_id);
-        if (thread == NULL) {
+        thread = CreateThread(nullptr, 0, clicker, this, 0, nullptr);
+        if (thread == nullptr) {
             running = false;
         }
     } else {

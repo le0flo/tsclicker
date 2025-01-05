@@ -1,25 +1,27 @@
 #include "recorder.h"
 
-Recorder::Recorder() {
-    running = false;
-    intervals.clear();
+Recorder::Recorder() { 
+    thread = nullptr;
+
+    enable_recorder(false);
+    clear_intervals();
 }
 
 DWORD WINAPI Recorder::recorder(LPVOID lpArg) {
     Recorder* instance = static_cast<Recorder*>(lpArg);
 
-    if (instance == NULL) {
+    if (instance == nullptr) {
         return -1;
     }
 
     HWND foreground_window;
     bool is_window_minecraft;
 
-    instance->intervals.clear();
+    instance->clear_intervals();
 
     while (instance->running) {
         foreground_window = GetForegroundWindow();
-        is_window_minecraft = FindWindowA(("LWJGL"), NULL) == foreground_window || FindWindowA(("GLFW30"), NULL) == foreground_window;
+        is_window_minecraft = FindWindowA(("LWJGL"), nullptr) == foreground_window || FindWindowA(("GLFW30"), nullptr) == foreground_window;
 
         if (GetAsyncKeyState(VK_LBUTTON) && is_window_minecraft) {
             instance->intervals.push_back(instance->current_ms());
@@ -51,21 +53,32 @@ void Recorder::forcestop() {
     }
 }
 
-bool Recorder::toggle_recorder() {
-    running = !running;
-
-    if (running) {
-        thread = CreateThread(NULL, 0, recorder, this, 0, &thread_id);
-        if (thread == NULL) {
-            running = false;
-        }
-    } else {
-        WaitForSingleObject(thread, INFINITE);
+void Recorder::enable_recorder(bool toggle) {
+    if (running == toggle) {
+        return;
     }
 
-    return running;
+    running = toggle;
+
+    if (running) {
+        thread = CreateThread(nullptr, 0, recorder, this, 0, nullptr);
+        if (thread == nullptr) {
+            running = false;
+        }
+    }
+    else {
+        WaitForSingleObject(thread, INFINITE);
+    }
 }
+
+// Getters
 
 std::vector<long long> Recorder::get_intervals() {
     return intervals;
+}
+
+// Setters
+
+void Recorder::clear_intervals() {
+    intervals.clear();
 }

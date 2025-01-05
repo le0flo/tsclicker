@@ -9,19 +9,20 @@
 class Recorder {
 private:
     HANDLE thread;
-    DWORD thread_id;
-
     static DWORD WINAPI recorder(LPVOID lpArg);
-    long long current_ms();
 
     bool running;
     std::vector<long long> intervals;
 
+    long long current_ms();
+
 public:
     Recorder();
     void forcestop();
-    bool toggle_recorder();
+
+    void enable_recorder(bool toggle);
     std::vector<long long> get_intervals();
+    void clear_intervals();
 };
 
 #endif
