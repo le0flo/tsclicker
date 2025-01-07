@@ -19,21 +19,21 @@ RecorderUi::~RecorderUi() {
 }
 
 void RecorderUi::setup() {
-    toggle->setText("Recording");
+    toggle->setText("Record");
     toggle->setCheckState(Qt::CheckState::Unchecked);
-    toggle->setGeometry(QRect(450, 350, 100, 20));
+    toggle->setGeometry(QRect(20, 20, 200, 20));
     connect(toggle, &QCheckBox::clicked, this, &RecorderUi::on_change);
 
     recorder_save->setText("Save");
-    recorder_save->setGeometry(QRect(0, 50, 200, 40));
+    recorder_save->setGeometry(QRect(220, 20, 100, 20));
     connect(recorder_save, &QPushButton::clicked, this, &RecorderUi::save_intervals);
 
     intervals_path->setPlaceholderText("File path");
-    intervals_path->setGeometry(QRect(0, 100, 300, 20));
+    intervals_path->setGeometry(QRect(20, 80, 300, 20));
     connect(intervals_path, &QLineEdit::textChanged, this, &RecorderUi::on_change);
 
     intervals_open->setText("Open");
-    intervals_open->setGeometry(QRect(350, 100, 100, 20));
+    intervals_open->setGeometry(QRect(220, 50, 100, 20));
     connect(intervals_open, &QPushButton::clicked, this, &RecorderUi::open_intervals);
 }
 
@@ -42,12 +42,12 @@ void RecorderUi::on_change() {
 }
 
 void RecorderUi::open_intervals() {
-    QString filename = QFileDialog::getOpenFileName(this, "Select the recording", plugin::data_folder().c_str(), PLUGIN_FILEFORMAT_FILTER);
+    QString filename = QFileDialog::getOpenFileName(this, "Select the recording", plugin::data_folder().c_str(), PLUGIN_FILTER_FILE);
 
     if (filename.isEmpty()) return;
 
-    if (!filename.endsWith(PLUGIN_FILEFORMAT)) {
-        filename.append(PLUGIN_FILEFORMAT);
+    if (!filename.endsWith(PLUGIN_SUFFIX_FILE)) {
+        filename.append(PLUGIN_SUFFIX_FILE);
     }
 
     update_intervals_path(filename);
@@ -61,15 +61,15 @@ void RecorderUi::save_intervals() {
         return;
     }
 
-    QString filename = QFileDialog::getSaveFileName(this, "Save the recording", plugin::data_folder().c_str(), PLUGIN_FILEFORMAT_FILTER);
+    QString filename = QFileDialog::getSaveFileName(this, "Save the recording", plugin::data_folder().c_str(), PLUGIN_FILTER_FILE);
 
     if (filename.isEmpty()) {
         MessageBoxA(nullptr, "Invalid file name.", "Error", MB_ICONERROR);
         return;
     }
 
-    if (!filename.endsWith(PLUGIN_FILEFORMAT)) {
-        filename.append(PLUGIN_FILEFORMAT);
+    if (!filename.endsWith(PLUGIN_SUFFIX_FILE)) {
+        filename.append(PLUGIN_SUFFIX_FILE);
     }
 
     write_intervals(filename.toStdString(), intervals);

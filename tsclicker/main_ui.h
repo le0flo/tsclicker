@@ -22,7 +22,7 @@ private:
     void setup();
 
 public:
-    MainUi(Clicker* clicker, Recorder* recorder, QWidget* parent = 0);
+    MainUi(Clicker* clicker, Recorder* recorder, Injector* injector, QWidget* parent = 0);
     ~MainUi();
 
     ClickerUi* get_clicker();

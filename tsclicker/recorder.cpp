@@ -36,8 +36,13 @@ DWORD WINAPI Recorder::recorder(LPVOID lpArg) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    instance->intervals.erase(instance->intervals.begin(), instance->intervals.begin()+4);
-    instance->intervals.erase(instance->intervals.end()-4, instance->intervals.end());
+    if (instance->intervals.size() >= 10) {
+        instance->intervals.erase(instance->intervals.begin(), instance->intervals.begin() + 4);
+        instance->intervals.erase(instance->intervals.end() - 4, instance->intervals.end());
+    }
+    else {
+        instance->clear_intervals();
+    }
 
     return 0;
 }

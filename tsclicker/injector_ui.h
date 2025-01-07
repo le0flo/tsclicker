@@ -12,9 +12,12 @@
 #include <QtWidgets/QFileDialog>
 
 #include "plugin.h"
+#include "injector.h"
 
 class InjectorUi : public QWidget {
 private:
+    Injector* injector = nullptr;
+
     QCheckBox* toggle = nullptr;
     QLineEdit* module_path = nullptr;
     QPushButton* module_open = nullptr;
@@ -26,7 +29,7 @@ private:
     void inject_module();
 
 public:
-    InjectorUi(QWidget* parent = 0);
+    InjectorUi(Injector* injector, QWidget* parent = 0);
     ~InjectorUi();
 };
 

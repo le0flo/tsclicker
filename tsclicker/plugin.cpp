@@ -33,6 +33,7 @@ static struct TS3Functions ts3Functions;
 static char* pluginID = nullptr;
 Clicker* clicker = nullptr;
 Recorder* recorder = nullptr;
+Injector* injector = nullptr;
 MainUi* main_ui = nullptr;
 
 const char* ts3plugin_name() {
@@ -74,7 +75,8 @@ int ts3plugin_init() {
 
     clicker = new Clicker();
     recorder = new Recorder();
-    main_ui = new MainUi(clicker, recorder);
+    injector = new Injector();
+    main_ui = new MainUi(clicker, recorder, injector);
 
     return 0;
 }
@@ -88,6 +90,8 @@ void ts3plugin_shutdown() {
 
     recorder->forcestop();
     delete recorder;
+
+    delete injector;
 
     if (pluginID) {
         free(pluginID);

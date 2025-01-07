@@ -16,8 +16,11 @@
 #define PLUGIN_VERSION "2.0"
 #define PLUGIN_AUTHOR "Bestemmie"
 #define PLUGIN_DESCRIPTION "Skibidi sigma clicker"
-#define PLUGIN_FILEFORMAT ".tsc"
-#define PLUGIN_FILEFORMAT_FILTER "TS clicker intervals (*.tsc)"
+
+#define PLUGIN_SUFFIX_FILE ".tsc"
+#define PLUGIN_SUFFIX_ADDON ".dll"
+#define PLUGIN_FILTER_FILE "TS clicker intervals (*.tsc)"
+#define PLUGIN_FILTER_ADDON "TS clicker addons (*.dll)"
 
 extern "C" {
 
