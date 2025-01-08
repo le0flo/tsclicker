@@ -3,6 +3,7 @@
 InjectorUi::InjectorUi(QWidget* parent) : QWidget(parent) { 
     label = new QLabel(this);
     open = new QPushButton(this);
+    remove = new QPushButton(this);
     path = new QLineEdit(this);
     list = new QListWidget(this);
     
@@ -12,6 +13,7 @@ InjectorUi::InjectorUi(QWidget* parent) : QWidget(parent) {
 InjectorUi::~InjectorUi() {
     delete label;
     delete open;
+    delete remove;
     delete path;
     delete list;
 }
@@ -24,8 +26,12 @@ void InjectorUi::setup() {
     open->setGeometry(QRect(220, 20, 100, 50));
     connect(open, &QPushButton::clicked, this, &InjectorUi::open_module);
 
+    remove->setText("Remove\nmodule");
+    remove->setGeometry(QRect(330, 20, 100, 50));
+    connect(remove, &QPushButton::clicked, this, &InjectorUi::remove_module);
+
     path->setPlaceholderText("Module path");
-    path->setGeometry(QRect(20, 80, 300, 20));
+    path->setGeometry(QRect(20, 80, 400, 20));
 
     list->setGeometry(QRect(20, 120, 460, 140));
     list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -71,17 +77,13 @@ void InjectorUi::append_module(std::string filename) {
     list->setItemWidget(item, widget);
 }
 
-void InjectorUi::remove_module(std::string filename) {
-    QListWidgetItem* item;
-    ModuleUi* widget;
+void InjectorUi::remove_module() {
+    QListWidgetItem* item = list->currentItem();
+    
+    if (item == nullptr) return;
 
-    for (int i = 0; i < list->count(); i++) {
-        item = list->item(i);
-        widget = dynamic_cast<ModuleUi*>(list->itemWidget(item));
+    ModuleUi* widget = dynamic_cast<ModuleUi*>(list->itemWidget(item));
 
-        if (widget->filename == filename) {
-            delete item;
-            break;
-        }
-    }
+    widget->remove_module();
+    delete item;
 }

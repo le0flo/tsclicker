@@ -19,18 +19,18 @@ class InjectorUi : public QWidget {
 private:
     QLabel* label = nullptr;
     QPushButton* open = nullptr;
+    QPushButton* remove = nullptr;
     QLineEdit* path = nullptr;
     QListWidget* list = nullptr;
 
     void setup();
+    void open_module();
+    void append_module(std::string filename);
+    void remove_module();
 
 public:
     InjectorUi(QWidget* parent = 0);
     ~InjectorUi();
-
-    void open_module();
-    void append_module(std::string filename);
-    void remove_module(std::string filename);
 };
 
 #endif

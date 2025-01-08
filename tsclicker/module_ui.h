@@ -10,18 +10,13 @@
 #include <QtWidgets/qcheckbox.h>
 #include <QtWidgets/qpushbutton.h>
 
-#include "injector_ui.h"
-
 class ModuleUi : public QWidget {
 private:
     QLabel* label = nullptr;
     QCheckBox* toggle = nullptr;
-    QPushButton* remove = nullptr;
 
     void setup();
 
-    void enable_module();
-    void remove_module();
     bool inject_module();
     bool eject_module();
 
@@ -32,6 +27,9 @@ public:
 
     ModuleUi(std::string filename, QWidget* parent = 0);
     ~ModuleUi();
+
+    void enable_module();
+    void remove_module();
 };
 
 #endif

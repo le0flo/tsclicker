@@ -5,7 +5,6 @@ ModuleUi::ModuleUi(std::string filename, QWidget* parent) : QWidget(parent) {
 
 	label = new QLabel(this);
 	toggle = new QCheckBox(this);
-	remove = new QPushButton(this);
 
 	this->setup();
 }
@@ -13,7 +12,6 @@ ModuleUi::ModuleUi(std::string filename, QWidget* parent) : QWidget(parent) {
 ModuleUi::~ModuleUi() {
 	delete label;
 	delete toggle;
-	delete remove;
 }
 
 void ModuleUi::setup() {
@@ -27,10 +25,6 @@ void ModuleUi::setup() {
 	toggle->setCheckState(Qt::CheckState::Unchecked);
 	toggle->setGeometry(QRect(200, 0, 100, 30));
 	connect(toggle, &QCheckBox::clicked, this, &ModuleUi::enable_module);
-
-	remove->setText("Remove");
-	remove->setGeometry(QRect(300, 0, 100, 30));
-	connect(remove, &QPushButton::clicked, this, &ModuleUi::remove_module);
 }
 
 void ModuleUi::enable_module() {
@@ -41,8 +35,7 @@ void ModuleUi::enable_module() {
 void ModuleUi::remove_module() {
 	if (toggle->isChecked()) eject_module();
 
-	InjectorUi* injector = dynamic_cast<InjectorUi*>(parent());
-	injector->remove_module(filename);
+	deleteLater();
 }
 
 bool ModuleUi::inject_module() {
