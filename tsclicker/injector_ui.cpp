@@ -25,21 +25,21 @@ InjectorUi::~InjectorUi() {
 }
 
 void InjectorUi::setup() {
-    label->setText("Inject");
+    label->setText("TS clicker addons");
     top_layout->addWidget(label);
 
-    open->setText("Open\nmodule");
+    open->setText("Open\naddon");
     connect(open, &QPushButton::clicked, this, &InjectorUi::open_module);
     top_layout->addWidget(open);
 
-    remove->setText("Remove\nmodule");
+    remove->setText("Remove\naddon");
     connect(remove, &QPushButton::clicked, this, &InjectorUi::remove_module);
     top_layout->addWidget(remove);
 
     top_row->setLayout(top_layout);
     main_layout->addWidget(top_row);
 
-    path->setPlaceholderText("Module path");
+    path->setPlaceholderText("Addon path");
     main_layout->addWidget(path);
 
     list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);

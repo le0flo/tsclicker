@@ -26,15 +26,25 @@ void ModuleUi::setup() {
 	layout->addWidget(label);
 
 	inject->setText("Inject");
-	connect(inject, &QPushButton::clicked, this, &ModuleUi::inject_module);
+	connect(inject, &QPushButton::clicked, this, &ModuleUi::enable_module);
 	layout->addWidget(inject);
 
 	eject->setText("Eject");
 	eject->setDisabled(true); // TODO sistema di eject
-	connect(eject, &QPushButton::clicked, this, &ModuleUi::eject_module);
 	layout->addWidget(eject);
 
 	setLayout(layout);
+}
+
+void ModuleUi::enable_module() {
+	if (inject_module()) {
+		inject->setDisabled(true);
+
+		MessageBoxA(nullptr, "Addon injected successfully.\nPress CANCEL anytime to eject the addon from the game.", "Success", MB_OK);
+	}
+	else {
+		MessageBoxA(nullptr, "Injection failed.", "Error", MB_ICONERROR);
+	}
 }
 
 void ModuleUi::remove_module() {

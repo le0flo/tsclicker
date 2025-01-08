@@ -23,7 +23,7 @@ void MainUi::setup() {
     tab_widget->setGeometry(this->geometry());
     tab_widget->addTab(clicker_tab, "Clicker");
     tab_widget->addTab(recorder_tab, "Recorder");
-    tab_widget->addTab(injector_tab, "Injector");
+    tab_widget->addTab(injector_tab, "Addons");
 }
 
 ClickerUi* MainUi::get_clicker() {

@@ -40,7 +40,7 @@ ClickerUi::~ClickerUi() {
 }
 
 void ClickerUi::setup() {
-    toggle->setText("Enable");
+    toggle->setText("Enabled");
     toggle->setCheckState(Qt::CheckState::Unchecked);
     connect(toggle, &QCheckBox::clicked, this, &ClickerUi::on_change);
     left_layout->addWidget(toggle);

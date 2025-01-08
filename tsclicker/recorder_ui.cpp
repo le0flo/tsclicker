@@ -71,7 +71,7 @@ void RecorderUi::save_intervals() {
     std::vector<long long> intervals = recorder->get_intervals();
 
     if (intervals.size() <= 0) {
-        MessageBoxA(nullptr, "No intervals found in memory, try again.", "Error", MB_ICONERROR);
+        MessageBoxA(nullptr, "No intervals found in memory.", "Error", MB_ICONERROR);
         return;
     }
 

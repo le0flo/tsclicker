@@ -31,6 +31,7 @@ public:
     ModuleUi(std::string filename, QWidget* parent = 0);
     ~ModuleUi();
 
+    void enable_module();
     void remove_module();
 };
 
