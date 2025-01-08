@@ -6,11 +6,11 @@
 #include <fstream>
 
 #include <QtCore/Qt>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QRadioButton>
-#include <QtWidgets/QSlider>
-#include <QtWidgets/QLabel>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qcheckbox.h>
+#include <QtWidgets/qradiobutton.h>
+#include <QtWidgets/qslider.h>
+#include <QtWidgets/qlabel.h>
 
 #include "plugin.h"
 #include "clicker.h"

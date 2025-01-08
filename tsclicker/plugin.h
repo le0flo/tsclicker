@@ -45,6 +45,7 @@ namespace plugin {
 	inline std::string intervals_path;
 
 	std::string data_folder();
+	std::string desktop_folder();
 }
 
 #endif

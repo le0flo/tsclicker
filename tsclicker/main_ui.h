@@ -5,8 +5,8 @@
 #include <string>
 
 #include <QtCore/Qt>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qtablewidget.h>
+#include <QtWidgets/qwidget.h>
 
 #include "clicker_ui.h"
 #include "recorder_ui.h"
@@ -22,7 +22,7 @@ private:
     void setup();
 
 public:
-    MainUi(Clicker* clicker, Recorder* recorder, Injector* injector, QWidget* parent = 0);
+    MainUi(Clicker* clicker, Recorder* recorder, QWidget* parent = 0);
     ~MainUi();
 
     ClickerUi* get_clicker();

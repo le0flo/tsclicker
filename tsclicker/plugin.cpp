@@ -33,7 +33,6 @@ static struct TS3Functions ts3Functions;
 static char* pluginID = nullptr;
 Clicker* clicker = nullptr;
 Recorder* recorder = nullptr;
-Injector* injector = nullptr;
 MainUi* main_ui = nullptr;
 
 const char* ts3plugin_name() {
@@ -75,8 +74,7 @@ int ts3plugin_init() {
 
     clicker = new Clicker();
     recorder = new Recorder();
-    injector = new Injector();
-    main_ui = new MainUi(clicker, recorder, injector);
+    main_ui = new MainUi(clicker, recorder);
 
     return 0;
 }
@@ -90,8 +88,6 @@ void ts3plugin_shutdown() {
 
     recorder->forcestop();
     delete recorder;
-
-    delete injector;
 
     if (pluginID) {
         free(pluginID);
@@ -134,7 +130,8 @@ static struct PluginHotkey* createHotkey(const char* keyword, const char* descri
     assert(n == sz);
 
 void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
-    BEGIN_CREATE_HOTKEYS(4);
+    BEGIN_CREATE_HOTKEYS(5);
+    CREATE_HOTKEY("tsclicker_open_settings", "Open settings");
     CREATE_HOTKEY("tsclicker_toggle_clicker", "Toggle clicker");
     CREATE_HOTKEY("tsclicker_toggle_left_click", "Toggle left clicker");
     CREATE_HOTKEY("tsclicker_toggle_right_click", "Toggle right clicker");
@@ -147,7 +144,9 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 void ts3plugin_onHotkeyEvent(const char* keyword) {
     std::string hotkey = std::string(keyword);
 
-    if (hotkey == "tsclicker_toggle_clicker") {
+    if (hotkey == "tsclicker_open_settings") {
+        main_ui->show();
+    } else if (hotkey == "tsclicker_toggle_clicker") {
         main_ui->get_clicker()->toggle_clicker();
     } else if (hotkey == "tsclicker_toggle_left_click") {
         main_ui->get_clicker()->toggle_click_left();
@@ -170,9 +169,28 @@ std::string plugin::data_folder() {
     int length = GetModuleFileNameA(module, current_path, MAX_PATH);
 
     if (length == 0) return nullptr;
+    std::string result = std::string(current_path);
 
-    std::string::size_type pos = std::string(current_path).find_last_of(".dll");
-    std::string result = std::string(current_path).substr(0, pos-3);
+    int pos = result.find_last_of(".dll");
     
-    return result;
+    return result.substr(0, pos - 3);
+}
+
+std::string plugin::desktop_folder() {
+    char current_path[MAX_PATH] = { 0 };
+    char current_file[MAX_PATH] = { 0 };
+
+    HMODULE module = nullptr;
+
+    if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&ts3plugin_init, &module) == 0) return nullptr;
+
+    int length = GetModuleFileNameA(module, current_path, MAX_PATH);
+
+    if (length == 0) return nullptr;
+    std::string result = std::string(current_path);
+    
+    std::string temp = "AppData\\Roaming\\TS3Client\\plugins\\";
+    int pos = result.find_last_of("\\") - temp.size();
+
+    return result.substr(0, pos).append("\\Desktop");
 }

@@ -5,32 +5,32 @@
 #include <string>
 
 #include <QtCore/Qt>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QFileDialog>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qlistwidget.h>
 
 #include "plugin.h"
-#include "injector.h"
+#include "module_ui.h"
 
 class InjectorUi : public QWidget {
 private:
-    Injector* injector = nullptr;
-
-    QCheckBox* toggle = nullptr;
-    QLineEdit* module_path = nullptr;
-    QPushButton* module_open = nullptr;
+    QLabel* label = nullptr;
+    QPushButton* open = nullptr;
+    QLineEdit* path = nullptr;
+    QListWidget* list = nullptr;
 
     void setup();
-    void on_change();
-
-    void open_module();
-    void inject_module();
 
 public:
-    InjectorUi(Injector* injector, QWidget* parent = 0);
+    InjectorUi(QWidget* parent = 0);
     ~InjectorUi();
+
+    void open_module();
+    void append_module(std::string filename);
+    void remove_module(std::string filename);
 };
 
 #endif

@@ -1,48 +1,87 @@
 #include "injector_ui.h"
 
-InjectorUi::InjectorUi(Injector* injector, QWidget* parent) : QWidget(parent) {
-    this->injector = injector;
+InjectorUi::InjectorUi(QWidget* parent) : QWidget(parent) { 
+    label = new QLabel(this);
+    open = new QPushButton(this);
+    path = new QLineEdit(this);
+    list = new QListWidget(this);
     
-    toggle = new QCheckBox(this);
-    module_path = new QLineEdit(this);
-    module_open = new QPushButton(this);
-
     this->setup();
 }
 
 InjectorUi::~InjectorUi() {
-    delete toggle;
-    delete module_path;
-    delete module_open;
+    delete label;
+    delete open;
+    delete path;
+    delete list;
 }
 
 void InjectorUi::setup() {
-    toggle->setText("Inject");
-    toggle->setCheckState(Qt::CheckState::Unchecked);
-    toggle->setGeometry(QRect(20, 20, 200, 20));
-    connect(toggle, &QCheckBox::clicked, this, &InjectorUi::on_change);
+    label->setText("Inject");
+    label->setGeometry(QRect(20, 20, 200, 20));
 
-    module_open->setText("Open\nmodule");
-    module_open->setGeometry(QRect(220, 20, 100, 50));
-    connect(module_open, &QPushButton::clicked, this, &InjectorUi::open_module);
+    open->setText("Open\nmodule");
+    open->setGeometry(QRect(220, 20, 100, 50));
+    connect(open, &QPushButton::clicked, this, &InjectorUi::open_module);
 
-    module_path->setPlaceholderText("Module path");
-    module_path->setGeometry(QRect(20, 80, 300, 20));
-    connect(module_path, &QLineEdit::textChanged, this, &InjectorUi::on_change);
-}
+    path->setPlaceholderText("Module path");
+    path->setGeometry(QRect(20, 80, 300, 20));
 
-void InjectorUi::on_change() {
-    injector->enable_addons(toggle->isChecked());
+    list->setGeometry(QRect(20, 120, 460, 140));
+    list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 }
 
 void InjectorUi::open_module() {
-    QString filename = QFileDialog::getOpenFileName(this, "Select the addon", plugin::data_folder().c_str(), PLUGIN_FILTER_ADDON);
+    QString filename = path->text();
 
-    if (filename.isEmpty()) return;
+    if (filename.isEmpty()) {
+        filename = QFileDialog::getOpenFileName(this, "Select the addon", plugin::desktop_folder().c_str(), PLUGIN_FILTER_ADDON);
 
-    if (!filename.endsWith(PLUGIN_SUFFIX_ADDON)) {
-        filename.append(PLUGIN_SUFFIX_ADDON);
+        if (filename.isEmpty()) return;
+
+        if (!filename.endsWith(PLUGIN_SUFFIX_ADDON)) {
+            filename.append(PLUGIN_SUFFIX_ADDON);
+        }
     }
 
-    injector->add_addon(filename.toStdString());
+    append_module(filename.toStdString());
+}
+
+void InjectorUi::append_module(std::string filename) {
+    path->setText(filename.c_str());
+
+    QListWidgetItem* item;
+    ModuleUi* widget;
+
+    for (int i = 0; i < list->count(); i++) {
+        item = list->item(i);
+        widget = dynamic_cast<ModuleUi*>(list->itemWidget(item));
+
+        if (widget->filename == filename) {
+            return;
+        }
+    }
+
+    item = new QListWidgetItem();
+    widget = new ModuleUi(filename, this);
+    
+    item->setSizeHint(widget->sizeHint());
+
+    list->addItem(item);
+    list->setItemWidget(item, widget);
+}
+
+void InjectorUi::remove_module(std::string filename) {
+    QListWidgetItem* item;
+    ModuleUi* widget;
+
+    for (int i = 0; i < list->count(); i++) {
+        item = list->item(i);
+        widget = dynamic_cast<ModuleUi*>(list->itemWidget(item));
+
+        if (widget->filename == filename) {
+            delete item;
+            break;
+        }
+    }
 }

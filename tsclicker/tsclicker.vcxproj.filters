@@ -36,7 +36,7 @@
     <ClCompile Include="injector_ui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="injector.cpp">
+    <ClCompile Include="module_ui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,7 +62,7 @@
     <ClInclude Include="injector_ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="injector.h">
+    <ClInclude Include="module_ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,11 +6,11 @@
 #include <fstream>
 
 #include <QtCore/Qt>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QFileDialog>
+#include <QtWidgets/qwidget.h>
+#include <QtWidgets/qcheckbox.h>
+#include <QtWidgets/qpushbutton.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qfiledialog.h>
 
 #include "plugin.h"
 #include "recorder.h"
@@ -20,9 +20,9 @@ private:
     Recorder* recorder = nullptr;
 
     QCheckBox* toggle = nullptr;
-    QPushButton* recorder_save = nullptr;
-    QLineEdit* intervals_path = nullptr;
-    QPushButton* intervals_open = nullptr;
+    QPushButton* save = nullptr;
+    QPushButton* open = nullptr;
+    QLineEdit* path = nullptr;
 
     void setup();
     void on_change();

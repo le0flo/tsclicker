@@ -133,9 +133,9 @@
   <ItemGroup>
     <ClCompile Include="clicker.cpp" />
     <ClCompile Include="clicker_ui.cpp" />
-    <ClCompile Include="injector.cpp" />
     <ClCompile Include="injector_ui.cpp" />
     <ClCompile Include="main_ui.cpp" />
+    <ClCompile Include="module_ui.cpp" />
     <ClCompile Include="plugin.cpp" />
     <ClCompile Include="recorder.cpp" />
     <ClCompile Include="recorder_ui.cpp" />
@@ -143,9 +143,9 @@
   <ItemGroup>
     <ClInclude Include="clicker.h" />
     <ClInclude Include="clicker_ui.h" />
-    <ClInclude Include="injector.h" />
     <ClInclude Include="injector_ui.h" />
     <ClInclude Include="main_ui.h" />
+    <ClInclude Include="module_ui.h" />
     <ClInclude Include="plugin.h" />
     <ClInclude Include="recorder.h" />
     <ClInclude Include="recorder_ui.h" />

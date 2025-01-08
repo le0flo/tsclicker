@@ -1,10 +1,10 @@
 #include "main_ui.h"
 
-MainUi::MainUi(Clicker* clicker, Recorder* recorder, Injector* injector, QWidget* parent) : QWidget(parent) {
+MainUi::MainUi(Clicker* clicker, Recorder* recorder, QWidget* parent) : QWidget(parent) {
     tab_widget = new QTabWidget(this);
     clicker_tab = new ClickerUi(clicker, tab_widget);
     recorder_tab = new RecorderUi(recorder, tab_widget);
-    injector_tab = new InjectorUi(injector, tab_widget);
+    injector_tab = new InjectorUi(tab_widget);
 
     this->setup();
 }
@@ -18,7 +18,7 @@ MainUi::~MainUi() {
 
 void MainUi::setup() {
     setWindowTitle("TS clicker settings");
-    resize(500, 300);
+    setFixedSize(500, 300);
 
     tab_widget->setGeometry(QRect(0, 0, 1000, 550));
     tab_widget->addTab(clicker_tab, "Clicker");
