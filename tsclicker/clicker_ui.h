@@ -7,10 +7,11 @@
 
 #include <QtCore/Qt>
 #include <QtWidgets/qwidget.h>
+#include <QtWidgets/qlayout.h>
 #include <QtWidgets/qcheckbox.h>
-#include <QtWidgets/qradiobutton.h>
 #include <QtWidgets/qslider.h>
 #include <QtWidgets/qlabel.h>
+#include <QtWidgets/qradiobutton.h>
 
 #include "plugin.h"
 #include "clicker.h"
@@ -18,6 +19,14 @@
 class ClickerUi : public QWidget {
 private:
 	Clicker* clicker = nullptr;
+
+    QHBoxLayout* main_layout = nullptr;
+    QWidget* left_col = nullptr;
+    QVBoxLayout* left_layout = nullptr;
+    QWidget* clicks_row = nullptr;
+    QHBoxLayout* clicks_layout = nullptr;
+    QWidget* right_col = nullptr;
+    QVBoxLayout* right_layout = nullptr;
 
     QCheckBox* toggle = nullptr;
     QCheckBox* click_left = nullptr;

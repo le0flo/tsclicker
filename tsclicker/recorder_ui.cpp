@@ -3,15 +3,21 @@
 RecorderUi::RecorderUi(Recorder* recorder, QWidget* parent) : QWidget(parent) {
     this->recorder = recorder;
 
-    toggle = new QCheckBox(this);
-    save = new QPushButton(this);
-    open = new QPushButton(this);
+    main_layout = new QVBoxLayout(this);
+    top_row = new QWidget(this);
+    top_layout = new QHBoxLayout(top_row);
+    toggle = new QCheckBox(top_row);
+    save = new QPushButton(top_row);
+    open = new QPushButton(top_row);
     path = new QLineEdit(this);
 
     this->setup();
 }
 
 RecorderUi::~RecorderUi() {
+    delete main_layout;
+    delete top_row;
+    delete top_layout;
     delete toggle;
     delete save;
     delete open;
@@ -21,19 +27,24 @@ RecorderUi::~RecorderUi() {
 void RecorderUi::setup() {
     toggle->setText("Record");
     toggle->setCheckState(Qt::CheckState::Unchecked);
-    toggle->setGeometry(QRect(20, 20, 200, 20));
     connect(toggle, &QCheckBox::clicked, this, &RecorderUi::on_change);
+    top_layout->addWidget(toggle);
 
-    save->setText("Save");
-    save->setGeometry(QRect(220, 20, 100, 20));
+    save->setText("Save\nintervals");
     connect(save, &QPushButton::clicked, this, &RecorderUi::save_intervals);
+    top_layout->addWidget(save);
 
-    open->setText("Open");
-    open->setGeometry(QRect(220, 50, 100, 20));
+    open->setText("Open\nintervals");
     connect(open, &QPushButton::clicked, this, &RecorderUi::open_intervals);
+    top_layout->addWidget(open);
 
-    path->setPlaceholderText("File path");
-    path->setGeometry(QRect(20, 80, 300, 20));
+    top_row->setLayout(top_layout);
+    main_layout->addWidget(top_row);
+
+    path->setPlaceholderText("Intervals path");
+    main_layout->addWidget(path);
+
+    setLayout(main_layout);
 }
 
 void RecorderUi::on_change() {

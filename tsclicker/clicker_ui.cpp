@@ -3,18 +3,33 @@
 ClickerUi::ClickerUi(Clicker* clicker, QWidget* parent) : QWidget(parent) {
     this->clicker = clicker;
 
-    toggle = new QCheckBox(this);
-    click_left = new QCheckBox(this);
-    click_right = new QCheckBox(this);
-    cps_slider = new QSlider(this);
-    cps_label = new QLabel(this);
-    select_cps = new QRadioButton(this);
-    select_recording = new QRadioButton(this);
+    main_layout = new QHBoxLayout(this);
+    left_col = new QWidget(this);
+    left_layout = new QVBoxLayout(left_col);
+    clicks_row = new QWidget(left_col);
+    clicks_layout = new QHBoxLayout(clicks_row);
+    right_col = new QWidget(this);
+    right_layout = new QVBoxLayout(right_col);
+
+    toggle = new QCheckBox(left_col);
+    click_left = new QCheckBox(clicks_row);
+    click_right = new QCheckBox(clicks_row);
+    cps_slider = new QSlider(right_col);
+    cps_label = new QLabel(right_col);
+    select_cps = new QRadioButton(right_col);
+    select_recording = new QRadioButton(right_col);
 
     this->setup();
 }
 
 ClickerUi::~ClickerUi() {
+    delete main_layout;
+    delete left_col;
+    delete left_layout;
+    delete clicks_row;
+    delete clicks_layout;
+    delete right_col;
+    delete right_layout;
     delete toggle;
     delete click_left;
     delete click_right;
@@ -27,38 +42,48 @@ ClickerUi::~ClickerUi() {
 void ClickerUi::setup() {
     toggle->setText("Enable");
     toggle->setCheckState(Qt::CheckState::Unchecked);
-    toggle->setGeometry(QRect(20, 20, 200, 20));
     connect(toggle, &QCheckBox::clicked, this, &ClickerUi::on_change);
+    left_layout->addWidget(toggle);
 
     click_left->setText("Left");
     click_left->setCheckState(Qt::CheckState::Checked);
-    click_left->setGeometry(QRect(20, 80, 100, 20));
     connect(click_left, &QCheckBox::clicked, this, &ClickerUi::on_change);
+    clicks_layout->addWidget(click_left);
 
     click_right->setText("Right");
     click_right->setCheckState(Qt::CheckState::Unchecked);
-    click_right->setGeometry(QRect(120, 80, 100, 20));
     connect(click_right, &QCheckBox::clicked, this, &ClickerUi::on_change);
+    clicks_layout->addWidget(click_right);
+
+    clicks_row->setLayout(clicks_layout);
+    left_layout->addWidget(clicks_row);
+    left_col->setLayout(left_layout);
 
     cps_slider->setMinimum(6);
     cps_slider->setMaximum(60);
     cps_slider->setValue(16);
     cps_slider->setOrientation(Qt::Horizontal);
-    cps_slider->setGeometry(QRect(220, 40, 200, 20));
     connect(cps_slider, &QSlider::valueChanged, this, &ClickerUi::on_change);
+    right_layout->addWidget(cps_slider);
 
     std::string text = "CPS: " + std::to_string(cps_slider->value());
     cps_label->setText(text.c_str());
-    cps_label->setGeometry(QRect(220, 20, 200, 20));
+    right_layout->addWidget(cps_label);
 
     select_cps->setText("Static CPS");
     select_cps->setChecked(true);
-    select_cps->setGeometry(QRect(220, 60, 200, 20));
     connect(select_cps, &QRadioButton::clicked, this, &ClickerUi::on_change);
+    right_layout->addWidget(select_cps);
 
     select_recording->setText("Recorded clicks");
-    select_recording->setGeometry(QRect(220, 80, 200, 20));
     connect(select_recording, &QRadioButton::clicked, this, &ClickerUi::on_change);
+    right_layout->addWidget(select_recording);
+    
+    right_col->setLayout(right_layout);
+    
+    main_layout->addWidget(left_col);
+    main_layout->addWidget(right_col);
+    setLayout(main_layout);
 }
 
 void ClickerUi::on_change() {

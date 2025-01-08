@@ -1,9 +1,12 @@
 #include "injector_ui.h"
 
-InjectorUi::InjectorUi(QWidget* parent) : QWidget(parent) { 
-    label = new QLabel(this);
-    open = new QPushButton(this);
-    remove = new QPushButton(this);
+InjectorUi::InjectorUi(QWidget* parent) : QWidget(parent) {
+    main_layout = new QVBoxLayout(this);
+    top_row = new QWidget(this);
+    top_layout = new QHBoxLayout(top_row);
+    label = new QLabel(top_row);
+    open = new QPushButton(top_row);
+    remove = new QPushButton(top_row);
     path = new QLineEdit(this);
     list = new QListWidget(this);
     
@@ -11,6 +14,9 @@ InjectorUi::InjectorUi(QWidget* parent) : QWidget(parent) {
 }
 
 InjectorUi::~InjectorUi() {
+    delete main_layout;
+    delete top_row;
+    delete top_layout;
     delete label;
     delete open;
     delete remove;
@@ -20,21 +26,26 @@ InjectorUi::~InjectorUi() {
 
 void InjectorUi::setup() {
     label->setText("Inject");
-    label->setGeometry(QRect(20, 20, 200, 20));
+    top_layout->addWidget(label);
 
     open->setText("Open\nmodule");
-    open->setGeometry(QRect(220, 20, 100, 50));
     connect(open, &QPushButton::clicked, this, &InjectorUi::open_module);
+    top_layout->addWidget(open);
 
     remove->setText("Remove\nmodule");
-    remove->setGeometry(QRect(330, 20, 100, 50));
     connect(remove, &QPushButton::clicked, this, &InjectorUi::remove_module);
+    top_layout->addWidget(remove);
+
+    top_row->setLayout(top_layout);
+    main_layout->addWidget(top_row);
 
     path->setPlaceholderText("Module path");
-    path->setGeometry(QRect(20, 80, 400, 20));
+    main_layout->addWidget(path);
 
-    list->setGeometry(QRect(20, 120, 460, 140));
     list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    main_layout->addWidget(list);
+
+    setLayout(main_layout);
 }
 
 void InjectorUi::open_module() {

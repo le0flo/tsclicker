@@ -6,6 +6,7 @@
 
 #include <QtCore/Qt>
 #include <QtWidgets/qwidget.h>
+#include <QtWidgets/qlayout.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qlineedit.h>
@@ -17,6 +18,10 @@
 
 class InjectorUi : public QWidget {
 private:
+    QVBoxLayout* main_layout = nullptr;
+    QWidget* top_row = nullptr;
+    QHBoxLayout* top_layout = nullptr;
+
     QLabel* label = nullptr;
     QPushButton* open = nullptr;
     QPushButton* remove = nullptr;

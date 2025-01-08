@@ -6,14 +6,17 @@
 
 #include <QtCore/Qt>
 #include <QtWidgets/qwidget.h>
+#include <QtWidgets/qlayout.h>
 #include <QtWidgets/qlabel.h>
-#include <QtWidgets/qcheckbox.h>
 #include <QtWidgets/qpushbutton.h>
 
 class ModuleUi : public QWidget {
 private:
+    QHBoxLayout* layout = nullptr;
+
     QLabel* label = nullptr;
-    QCheckBox* toggle = nullptr;
+    QPushButton* inject = nullptr;
+    QPushButton* eject = nullptr;
 
     void setup();
 
@@ -28,7 +31,6 @@ public:
     ModuleUi(std::string filename, QWidget* parent = 0);
     ~ModuleUi();
 
-    void enable_module();
     void remove_module();
 };
 

@@ -7,6 +7,7 @@
 
 #include <QtCore/Qt>
 #include <QtWidgets/qwidget.h>
+#include <QtWidgets/qlayout.h>
 #include <QtWidgets/qcheckbox.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qlineedit.h>
@@ -18,6 +19,10 @@
 class RecorderUi : public QWidget {
 private:
     Recorder* recorder = nullptr;
+
+    QVBoxLayout* main_layout = nullptr;
+    QWidget* top_row = nullptr;
+    QHBoxLayout* top_layout = nullptr;
 
     QCheckBox* toggle = nullptr;
     QPushButton* save = nullptr;
