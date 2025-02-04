@@ -1,7 +1,5 @@
 # Teamspeak Clicker
 
-Questo plugin di teamspeak è un semplice autoclicker scritto in C++.
-
 ### Compilazione
 
 1. Scarica l'ultima versione di [Microsoft Visual Studio](https://visualstudio.microsoft.com/)
